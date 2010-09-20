@@ -28,7 +28,7 @@ public class MockableTest {
 	@Test
 	public void atMock() {
 	  assertThat(context.hasRegisteredType(Mockable.class)).isTrue();
-	  assertThat(mockable).isNull();
+	  assertThat(mockable).isNotNull();
 	  assertThat(injected).isNotNull();
 	}
 

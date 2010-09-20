@@ -27,9 +27,9 @@ public class MockwireTest {
 	@Before
 	public void setup() {
 		Mockwire.isolate(this);
-		assertThat(d).isNull();
-		assertThat(m).isNull();
-		assertThat(a).isNull();
+		assertThat(d).isNotNull();
+		assertThat(m).isNotNull();
+		assertThat(a).isNotNull();
 	}
 
 	@Test
