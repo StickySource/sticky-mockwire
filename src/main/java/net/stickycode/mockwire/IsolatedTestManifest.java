@@ -3,7 +3,7 @@ package net.stickycode.mockwire;
 
 
 
-public interface IsolatedTestManifest {
+public interface IsolatedTestManifest extends ParameterSource {
 
   boolean hasRegisteredType(Class<?> klass);
 

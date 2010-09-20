@@ -5,9 +5,8 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.when;
-
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 public class MockableTest {
 

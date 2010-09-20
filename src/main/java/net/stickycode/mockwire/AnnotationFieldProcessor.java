@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 
-public class AnnotationFieldProcessor
+public abstract class AnnotationFieldProcessor
     implements FieldProcessor {
 
   private Class<? extends Annotation> annotationClass;
@@ -13,9 +13,6 @@ public class AnnotationFieldProcessor
     this.annotationClass = annotation;
   }
 
-  @Override
-  public void processField(Field field) {
-  }
 
   @Override
   public boolean canProcess(Field field) {
