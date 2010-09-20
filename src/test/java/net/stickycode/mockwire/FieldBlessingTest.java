@@ -7,10 +7,10 @@ import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class ComponentTest {
+public class FieldBlessingTest {
 
-	@Bless
-	private Autowirable autowirable;
+  @Bless
+  private Autowirable autowirable;
 
 	@Inject
 	private Autowirable injected;
@@ -26,7 +26,7 @@ public class ComponentTest {
 	@Test
 	public void atBless() {
 	  assertThat(context.hasRegisteredType(Autowirable.class)).isTrue();
-	  assertThat(autowirable).isNull();
+	  assertThat(autowirable).isNotNull();
 	  assertThat(injected).isNotNull();
 	}
 }
