@@ -12,8 +12,11 @@ public class Reflector {
   public Reflector() {
   }
 
-  public FieldReflector forEachField() {
-    return new FieldReflector(this);
+  public Reflector forEachField(FieldProcessor... processors) {
+    for (FieldProcessor fieldProcessor : processors) {
+      fieldProcessors.add(fieldProcessor);
+    }
+    return this;
   }
 
   public void process(Object target) {
@@ -31,10 +34,6 @@ public class Reflector {
         if (processor.canProcess(field))
           processor.processField(field);
 
-  }
-
-  public void addFieldProcessor(FieldProcessor fieldProcessor) {
-    fieldProcessors.add(fieldProcessor);
   }
 
 }
