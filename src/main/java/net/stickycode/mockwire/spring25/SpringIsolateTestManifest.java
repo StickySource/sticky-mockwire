@@ -1,8 +1,8 @@
 package net.stickycode.mockwire.spring25;
 
 import java.beans.Introspector;
+import java.util.Map;
 
-import org.mockito.internal.util.Decamelizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -29,7 +29,6 @@ public class SpringIsolateTestManifest
 
     registerPostProcessor(new InjectAnnotationBeanPostProcessor());
     registerPostProcessor(new MockInjectionAnnotationBeanPostProcessor());
-    registerPostProcessor(new BlessInjectionAnnotationBeanPostProcessor());
 
     getBeanFactory().registerSingleton(
         Introspector.decapitalize(getClass().getSimpleName()),
@@ -88,6 +87,19 @@ public class SpringIsolateTestManifest
     GenericBeanDefinition bd = new GenericBeanDefinition();
     bd.setBeanClass(type);
     getDefaultListableBeanFactory().registerBeanDefinition(beanName, bd);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getBeanOfType(Class<?> type) {
+    Map<String, Object> beans = getBeansOfType(type);
+    if (beans.size() == 1)
+      return beans.values().iterator().next();
+
+    if (beans.size() == 0)
+      throw new MissingBeanException("Missing bean of type {}", type.getName());
+
+    throw new ExpectedUniqueBeanException("Found {} beans {} of type {}, expected 1", beans.size(), beans.keySet(), type.getName());
   }
 
 }
