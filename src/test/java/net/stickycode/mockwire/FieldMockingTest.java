@@ -18,20 +18,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-public class MockwireTest {
+public class FieldMockingTest {
 
 	@Mock
-	private Mockable m;
-
-	@Bless
-	private Autowirable a;
-
-	@Bless
-	private AutowirableWithDependencies d;
+	private Mockable mockable;
 
 	@Inject
-	private AutowirableWithDependencies injected;
+	private Mockable injected;
 
 	@Inject
 	IsolatedTestManifest context;
@@ -39,21 +34,17 @@ public class MockwireTest {
 	@Before
 	public void setup() {
 		Mockwire.isolate(this);
-		assertThat(d).isNull();
-		assertThat(m).isNotNull();
-		assertThat(a).isNull();
 	}
 
 	@Test
-	public void objectsAreAutowired() {
-		assertThat(injected).isNotNull();
-		assertThat(injected.getMock()).isNotNull();
-		assertThat(injected.getAutowirable()).isNotNull();
+	public void atMock() {
+	  assertThat(context.hasRegisteredType(Mockable.class)).isTrue();
+	  assertThat(mockable).isNotNull();
+	  assertThat(injected).isNotNull();
 	}
 
-	@Test(expected = CodingException.class)
-	public void nullParameterIsIllegal() {
-		Mockwire.isolate(null);
+	public void verifyMock() {
+		when(injected.callme()).thenReturn(true);
+		assertThat(injected.callme()).isEqualTo(true);
 	}
-
 }

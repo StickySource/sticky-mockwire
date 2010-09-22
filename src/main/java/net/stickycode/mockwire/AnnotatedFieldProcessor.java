@@ -16,12 +16,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 
-public abstract class AnnotationFieldProcessor
+public abstract class AnnotatedFieldProcessor
     implements FieldProcessor {
 
   private Class<? extends Annotation> annotationClass;
 
-  public AnnotationFieldProcessor(Class<? extends Annotation> annotation) {
+  public AnnotatedFieldProcessor(Class<? extends Annotation> annotation) {
     this.annotationClass = annotation;
   }
 

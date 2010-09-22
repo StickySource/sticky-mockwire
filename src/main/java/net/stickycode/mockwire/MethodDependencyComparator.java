@@ -15,7 +15,21 @@ package net.stickycode.mockwire;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 
-
+/**
+ * This comparator orders method in terms of return types being dependencies of other method signatures.
+ *
+ * For example
+ *
+ * <pre>
+ * public A bean1() {
+ * }
+ *
+ * public B bean2(A a) {
+ * }
+ * </pre>
+ *
+ * would result in order of bean1 before bean2 as bean1 returns a parameter of bean2.
+ */
 public class MethodDependencyComparator
     implements Comparator<Method> {
 

@@ -18,12 +18,12 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AnnotationMethodProcessor
+public abstract class AnnotatedMethodProcessor
     implements MethodProcessor {
 
   private Class<? extends Annotation> annotation;
 
-  public AnnotationMethodProcessor(Class<? extends Annotation> annotation) {
+  public AnnotatedMethodProcessor(Class<? extends Annotation> annotation) {
     this.annotation = annotation;
   }
 

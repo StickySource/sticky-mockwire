@@ -44,19 +44,19 @@ public class Mockwire {
     final Mocker mocker = new MockitoMocker();
     new Reflector()
       .forEachField(
-        new AnnotationFieldProcessor(Mock.class) {
+        new AnnotatedFieldProcessor(Mock.class) {
           @Override
           public void processField(Object target, Field field) {
             manifest.registerBean(field.getName(), mocker.mock(field.getType()));
           }
         },
-        new AnnotationFieldProcessor(Bless.class) {
+        new AnnotatedFieldProcessor(Bless.class) {
           @Override
           public void processField(Object target, Field field) {
             manifest.registerType(field.getName(), field.getType());
           }
         })
-      .forEachMethod(new AnnotationMethodProcessor(Bless.class) {
+      .forEachMethod(new AnnotatedMethodProcessor(Bless.class) {
         @Override
         public void processMethod(Object target, Method method) {
           manifest.registerBean(method.getName(), invoke(target, method, manifest));
