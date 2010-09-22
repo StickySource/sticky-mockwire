@@ -27,7 +27,7 @@ public class Mockwire {
   private final static Logger log = LoggerFactory.getLogger(Mockwire.class);
 
   static {
-    System.out.println("Using Mockwire v" + PomUtils.loadVersion("net.stickycode.mockwire", "sticky-mockwire") + " see < http://stickycode.net/mockwire > for information");
+    System.out.println("Using Mockwire v" + PomUtils.loadVersion("net.stickycode.mockwire", "sticky-mockwire") + " see http://stickycode.net/mockwire");
   }
 
   public static void isolate(Object testInstance) {
