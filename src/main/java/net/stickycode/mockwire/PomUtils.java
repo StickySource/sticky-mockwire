@@ -12,10 +12,28 @@
  */
 package net.stickycode.mockwire;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
 
 
-public interface Mocker {
+public class PomUtils {
 
-  <T> T mock(Class<T> type);
+  public static String loadVersion(String groupId, String artifactId) {
+    URL url = PomUtils.class.getResource("/META-INF/" + groupId + "/" + artifactId + ".properties");
+    if (url == null)
+      return "SNAPSHOT";
+
+    Properties p = new Properties();
+    try {
+      InputStream in = url.openStream();
+      p.load(in);
+      return p.getProperty("version");
+    }
+    catch (IOException e) {
+      throw new RuntimeException("Failed to load " + url, e);
+    }
+  }
 
 }

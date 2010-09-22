@@ -1,15 +1,37 @@
+/**
+ * Copyright (c) 2010 RedEngine Ltd, http://www.redengine.co.nz. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
 package net.stickycode.mockwire;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.stickycode.mockwire.mockito.MockitoMocker;
-import net.stickycode.mockwire.spring25.SpringIsolateTestManifest;
+import net.stickycode.mockwire.spring25.SpringIsolatedTestManifest;
 
 
 public class Mockwire {
 
+  private final static Logger log = LoggerFactory.getLogger(Mockwire.class);
+
+  static {
+    System.out.println("Using Mockwire v" + PomUtils.loadVersion("net.stickycode.mockwire", "sticky-mockwire") + " see < http://stickycode.net/mockwire > for information");
+  }
+
   public static void isolate(Object testInstance) {
+
     if (testInstance == null)
       throw new CodingException("You passed null when a test instance was expected");
 
@@ -18,7 +40,7 @@ public class Mockwire {
   }
 
   private static IsolatedTestManifest getManifest(Object testInstance) {
-    final IsolatedTestManifest manifest = new SpringIsolateTestManifest();
+    final IsolatedTestManifest manifest = new SpringIsolatedTestManifest();
     final Mocker mocker = new MockitoMocker();
     new Reflector()
       .forEachField(
