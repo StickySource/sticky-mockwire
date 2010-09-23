@@ -25,7 +25,6 @@ public abstract class AnnotatedFieldProcessor
     this.annotationClass = annotation;
   }
 
-
   @Override
   public boolean canProcess(Field field) {
     return field.isAnnotationPresent(annotationClass);
