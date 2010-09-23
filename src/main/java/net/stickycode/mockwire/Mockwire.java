@@ -15,6 +15,8 @@ package net.stickycode.mockwire;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import net.stickycode.mockwire.binder.MockerFactoryLoader;
+import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
 import net.stickycode.mockwire.mockito.MockitoMocker;
 import net.stickycode.mockwire.spring25.SpringIsolatedTestManifest;
 
@@ -29,23 +31,23 @@ public class Mockwire {
   }
 
   public static void isolate(Object testInstance) {
-
     if (testInstance == null)
       throw new CodingException("You passed null when a test instance was expected");
 
-    IsolatedTestManifest manifest = getManifest(testInstance);
+    Mocker mocker = MockerFactoryLoader.load();
+    IsolatedTestManifest manifest = TestManifestFactoryLoader.load();
+
+    process(manifest, mocker, testInstance);
     manifest.autowire(testInstance);
   }
 
-  private static IsolatedTestManifest getManifest(Object testInstance) {
-    final IsolatedTestManifest manifest = new SpringIsolatedTestManifest();
-    final Mocker mocker = new MockitoMocker();
+  private static IsolatedTestManifest process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
     new Reflector()
       .forEachField(
         new AnnotatedFieldProcessor(Mock.class) {
           @Override
           public void processField(Object target, Field field) {
-            manifest.registerBean(field.getName(), mocker.mock(field.getType()));
+            manifest.registerBean(field.getName(), mocker.mock(field.getType()), field.getType());
           }
         },
         new AnnotatedFieldProcessor(Bless.class) {
@@ -57,7 +59,7 @@ public class Mockwire {
       .forEachMethod(new AnnotatedMethodProcessor(Bless.class) {
         @Override
         public void processMethod(Object target, Method method) {
-          manifest.registerBean(method.getName(), invoke(target, method, manifest));
+          manifest.registerBean(method.getName(), invoke(target, method, manifest), method.getReturnType());
         }
       })
        .process(testInstance);

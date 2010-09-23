@@ -35,6 +35,7 @@
 			<artifactId>sticky-composite-unittest</artifactId>
 			<version>[1,2)</version>
 			<type>jar</type>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.stickycode.composite</groupId>
@@ -53,6 +54,13 @@
 		<dependency>
 			<groupId>net.stickycode.mockwire</groupId>
 			<artifactId>sticky-mockwire-api</artifactId>
+			<version>[1,2)</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.stickycode.mockwire</groupId>
+			<artifactId>sticky-mockwire-mockito</artifactId>
 			<version>[1,2)</version>
 			<type>jar</type>
 			<scope>compile</scope>
