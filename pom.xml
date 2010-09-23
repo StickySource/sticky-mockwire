@@ -23,7 +23,7 @@
 
 	<groupId>net.stickycode.mockwire</groupId>
 	<artifactId>sticky-mockwire</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.4</version>
 	<packaging>jar</packaging>
 
 	<name>Unittest Context Isolation</name>
@@ -35,7 +35,6 @@
 			<artifactId>sticky-composite-unittest</artifactId>
 			<version>[1,2)</version>
 			<type>jar</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.stickycode.composite</groupId>
@@ -66,4 +65,9 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
+  <scm>
+    <connection>scm:svn:https://stickycode.googlecode.com/svn/tags/net.stickycode.mockwire/sticky-mockwire-1.4</connection>
+    <developerConnection>scm:svn:https://stickycode.googlecode.com/svn/tags/net.stickycode.mockwire/sticky-mockwire-1.4</developerConnection>
+  </scm>
 </project>
