@@ -21,7 +21,7 @@ import java.util.Properties;
 public class PomUtils {
 
   public static String loadVersion(String groupId, String artifactId) {
-    URL url = PomUtils.class.getResource("/META-INF/" + groupId + "/" + artifactId + ".properties");
+    URL url = PomUtils.class.getResource("/META-INF/maven/" + groupId + "/" + artifactId + ".properties");
     if (url == null)
       return "SNAPSHOT";
 

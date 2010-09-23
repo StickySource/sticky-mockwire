@@ -15,19 +15,17 @@ package net.stickycode.mockwire;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.stickycode.mockwire.mockito.MockitoMocker;
 import net.stickycode.mockwire.spring25.SpringIsolatedTestManifest;
 
 
 public class Mockwire {
 
-  private final static Logger log = LoggerFactory.getLogger(Mockwire.class);
+  private static final String version;
 
   static {
-    System.out.println("Using Mockwire v" + PomUtils.loadVersion("net.stickycode.mockwire", "sticky-mockwire") + " see http://stickycode.net/mockwire");
+    version = PomUtils.loadVersion("net.stickycode.mockwire", "sticky-mockwire");
+    System.out.println("Using Mockwire v" + version + " see http://stickycode.net/mockwire");
   }
 
   public static void isolate(Object testInstance) {
