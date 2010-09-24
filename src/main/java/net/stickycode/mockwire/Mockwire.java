@@ -12,16 +12,8 @@
  */
 package net.stickycode.mockwire;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
-import net.stickycode.mockwire.binder.MockerFactoryLoader;
-import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
-import net.stickycode.mockwire.mockito.MockitoMocker;
-import net.stickycode.mockwire.spring25.SpringIsolatedTestManifest;
-
-
-public class Mockwire {
+public final class Mockwire {
 
   private static final String version;
 
@@ -30,41 +22,15 @@ public class Mockwire {
     System.out.println("Using Mockwire v" + version + " see http://stickycode.net/mockwire");
   }
 
-  public static void isolate(Object testInstance) {
+  static public void isolate(Object testInstance) {
     if (testInstance == null)
       throw new CodingException("You passed null when a test instance was expected");
 
-    Mocker mocker = MockerFactoryLoader.load();
-    IsolatedTestManifest manifest = TestManifestFactoryLoader.load();
-
-    process(manifest, mocker, testInstance);
-    manifest.autowire(testInstance);
+    new MockwireIsolator(testInstance.getClass()).initialiseTestInstance(testInstance);
   }
 
-  private static IsolatedTestManifest process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
-    new Reflector()
-      .forEachField(
-        new AnnotatedFieldProcessor(Mock.class) {
-          @Override
-          public void processField(Object target, Field field) {
-            manifest.registerBean(field.getName(), mocker.mock(field.getType()), field.getType());
-          }
-        },
-        new AnnotatedFieldProcessor(Bless.class) {
-          @Override
-          public void processField(Object target, Field field) {
-            manifest.registerType(field.getName(), field.getType());
-          }
-        })
-      .forEachMethod(new AnnotatedMethodProcessor(Bless.class) {
-        @Override
-        public void processMethod(Object target, Method method) {
-          manifest.registerBean(method.getName(), invoke(target, method, manifest), method.getReturnType());
-        }
-      })
-       .process(testInstance);
-
-    return manifest;
+  static public void contain(Object testInstance) {
+    new MockwireContained(testInstance.getClass()).initialiseTestInstance(testInstance);
   }
 
 }

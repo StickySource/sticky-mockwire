@@ -14,11 +14,14 @@ package net.stickycode.mockwire;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import net.stickycode.mockwire.junit4.MockwireRunner;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+@RunWith(MockwireRunner.class)
 public class DependentMethodBlessingTest {
 
   public class AutowirableWithAutowirable {
@@ -58,11 +61,6 @@ public class DependentMethodBlessingTest {
 
 	@Inject
 	IsolatedTestManifest context;
-
-	@Before
-	public void setup() {
-		Mockwire.isolate(this);
-	}
 
 	@Test
 	public void atBless() {

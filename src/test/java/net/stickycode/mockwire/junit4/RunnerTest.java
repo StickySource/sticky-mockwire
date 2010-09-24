@@ -10,7 +10,7 @@ import net.stickycode.mockwire.Mockable;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-@RunWith(MockwireIsolate.class)
+@RunWith(MockwireRunner.class)
 public class RunnerTest {
 
   @Mock
