@@ -1,7 +1,6 @@
 package net.stickycode.mockwire.binder;
 
 import net.stickycode.mockwire.IsolatedTestManifest;
-import net.stickycode.mockwire.binder.ContextManifestFactory;
 
 public class TestManifestFactoryLoader {
 
