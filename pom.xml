@@ -41,14 +41,7 @@
 			<artifactId>sticky-composite-logging-deploy</artifactId>
 			<version>[1,2)</version>
 			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.stickycode.mockwire</groupId>
-			<artifactId>sticky-mockwire-spring25</artifactId>
-			<version>[1,2)</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.stickycode.mockwire</groupId>
@@ -62,7 +55,14 @@
 			<artifactId>sticky-mockwire-mockito</artifactId>
 			<version>[1,2)</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.stickycode.mockwire</groupId>
+			<artifactId>sticky-mockwire-spring25</artifactId>
+			<version>[1,2)</version>
+			<type>jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
