@@ -4,8 +4,8 @@ import net.stickycode.mockwire.IsolatedTestManifest;
 import net.stickycode.mockwire.spring25.SpringIsolatedTestManifest;
 
 
-public class TestManifestFactoryBinder
-    implements TestManifestFactory {
+public class ContextManifestFactoryBinder
+    implements ContextManifestFactory {
 
   @Override
   public IsolatedTestManifest create() {

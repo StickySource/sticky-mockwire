@@ -1,24 +1,24 @@
 package net.stickycode.mockwire.binder;
 
 import net.stickycode.mockwire.IsolatedTestManifest;
-import net.stickycode.mockwire.binder.TestManifestFactory;
+import net.stickycode.mockwire.binder.ContextManifestFactory;
 
 public class TestManifestFactoryLoader {
 
-  private static TestManifestFactory SINGLETON;
+  private static ContextManifestFactory SINGLETON;
 
   public static IsolatedTestManifest load() {
     if (SINGLETON != null)
       return SINGLETON.create();
 
     try {
-      Class<?> klass = Class.forName(TestManifestFactory.class.getName() + "Binder");
-      if (TestManifestFactory.class.isAssignableFrom(klass)) {
-        SINGLETON = (TestManifestFactory) klass.newInstance();
+      Class<?> klass = Class.forName(ContextManifestFactory.class.getName() + "Binder");
+      if (ContextManifestFactory.class.isAssignableFrom(klass)) {
+        SINGLETON = (ContextManifestFactory) klass.newInstance();
         return SINGLETON.create();
       }
 
-      throw new IllegalStateException("Class " + klass.getName() + " should implement " + TestManifestFactory.class.getName());
+      throw new IllegalStateException("Class " + klass.getName() + " should implement " + ContextManifestFactory.class.getName());
     }
     catch (ClassNotFoundException e) {
       throw new IllegalStateException("You must have an TestManifestFactory implmentation to run Mockwire", e);
@@ -34,7 +34,7 @@ public class TestManifestFactoryLoader {
   /**
    * Used for highjacking the actual context implementation used;
    */
-  static void preset(TestManifestFactory manifest) {
+  static void preset(ContextManifestFactory manifest) {
     SINGLETON = manifest;
   }
 
