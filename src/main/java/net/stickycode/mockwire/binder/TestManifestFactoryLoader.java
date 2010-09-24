@@ -14,13 +14,13 @@ public class TestManifestFactoryLoader {
       throw new IllegalStateException("Class " + klass.getName() + " should implement " + TestManifestFactory.class.getName());
     }
     catch (ClassNotFoundException e) {
-      throw new IllegalStateException("You must have an Mocker implmentation to run Mockwire", e);
+      throw new IllegalStateException("You must have an TestManifestFactory implmentation to run Mockwire", e);
     }
     catch (InstantiationException e) {
-      throw new IllegalStateException("You must have an Mocker implmentation to run Mockwire", e);
+      throw new IllegalStateException("You must have an TestManifestFactory implmentation to run Mockwire", e);
     }
     catch (IllegalAccessException e) {
-      throw new IllegalStateException("You must have an Mocker implmentation to run Mockwire", e);
+      throw new IllegalStateException("You must have an TestManifestFactory implmentation to run Mockwire", e);
     }
   }
 
