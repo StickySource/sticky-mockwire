@@ -26,9 +26,10 @@
 	<version>1.7-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Unittest Context Isolation</name>
-	<description>Isolation and definition of test contexts</description>
+	<name>sticky-mockwire</name>
+	<description>A mechnism for using a test class as the manifest for isolating the context of a test. Thereby using the same di mechanism you would expect in production but fully controlled to isolate the variable under test.</description>
 
+	<inceptionYear>2009</inceptionYear>
 	<dependencies>
 		<dependency>
 			<groupId>net.stickycode.composite</groupId>
