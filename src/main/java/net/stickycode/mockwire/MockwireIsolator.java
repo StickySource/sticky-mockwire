@@ -24,7 +24,9 @@ public class MockwireIsolator implements MockwireContext {
   }
 
   public void initialiseTestInstance(Object testInstance) {
+    // TODO this should call create on the factory!
     Mocker mocker = MockerFactoryLoader.load();
+    // TODO this should call create on the factory!
     IsolatedTestManifest manifest = TestManifestFactoryLoader.load();
 
     process(manifest, mocker, testInstance);
