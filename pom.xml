@@ -23,7 +23,7 @@
 
 	<groupId>net.stickycode.mockwire</groupId>
 	<artifactId>sticky-mockwire</artifactId>
-	<version>1.7-SNAPSHOT</version>
+	<version>1.7</version>
 	<packaging>jar</packaging>
 
 	<name>sticky-mockwire</name>
@@ -66,4 +66,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+  <scm>
+    <connection>scm:svn:https://stickycode.googlecode.com/svn/tags/net.stickycode.mockwire/sticky-mockwire-1.7</connection>
+    <developerConnection>scm:svn:https://stickycode.googlecode.com/svn/tags/net.stickycode.mockwire/sticky-mockwire-1.7</developerConnection>
+  </scm>
 </project>
