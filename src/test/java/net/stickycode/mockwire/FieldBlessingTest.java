@@ -38,7 +38,7 @@ public class FieldBlessingTest {
 	@Test
 	public void atBless() {
 	  assertThat(context.hasRegisteredType(Autowirable.class)).isTrue();
-	  assertThat(autowirable).isNull();
+	  assertThat(autowirable).isNotNull();
 	  assertThat(injected).isNotNull();
 	}
 }

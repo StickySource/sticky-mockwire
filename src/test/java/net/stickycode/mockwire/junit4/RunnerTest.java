@@ -22,6 +22,6 @@ public class RunnerTest {
   @Test
   public void test() {
     assertThat(mockable).isNotNull();
-    assertThat(autowirable).isNull();
+    assertThat(autowirable).isNotNull();
   }
 }

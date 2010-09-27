@@ -38,9 +38,9 @@ public abstract class AbstractIsolationTest {
 
 	@Before
 	public void setup() {
-		assertThat(d).isNull();
+		assertThat(d).isNotNull();
 		assertThat(m).isNotNull();
-		assertThat(a).isNull();
+		assertThat(a).isNotNull();
 	}
 
 	@Test
