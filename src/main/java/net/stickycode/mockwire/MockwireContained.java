@@ -1,15 +1,13 @@
 package net.stickycode.mockwire;
 
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
 import net.stickycode.mockwire.junit4.MockwireContext;
+import net.stickycode.mockwire.reflector.Reflector;
 
+public class MockwireContained
+    implements MockwireContext {
 
-public class MockwireContained implements MockwireContext {
   private static final String version;
 
   static {
@@ -32,7 +30,7 @@ public class MockwireContained implements MockwireContext {
 
   private String[] deriveContainmentRoots(Class<?> testClass2, MockwireContainment containment) {
     if (containment == null || containment.value().length == 0)
-      return new String[] {(packageToPath(testClass.getPackage()))};
+      return new String[] { (packageToPath(testClass.getPackage())) };
 
     for (String path : containment.value())
       if (!path.startsWith("/"))
@@ -58,28 +56,13 @@ public class MockwireContained implements MockwireContext {
 
   private IsolatedTestManifest process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
     new Reflector()
-      .forEachField(
-        new AnnotatedFieldProcessor(Mock.class) {
-          @Override
-          public void processField(Object target, Field field) {
-            manifest.registerBean(field.getName(), mocker.mock(field.getType()), field.getType());
-          }
-        },
-        new AnnotatedFieldProcessor(Bless.class) {
-          @Override
-          public void processField(Object target, Field field) {
-            manifest.registerType(field.getName(), field.getType());
-          }
-        })
-      .forEachMethod(new AnnotatedMethodProcessor(Bless.class) {
-        @Override
-        public void processMethod(Object target, Method method) {
-          manifest.registerBean(method.getName(), invoke(target, method, manifest), method.getReturnType());
-        }
-      })
-       .process(testInstance);
+          .forEachField(
+              new MockAnnotatedFieldProcessor(Mock.class, manifest, mocker),
+              new BlessAnnotatedFieldProcessor(Bless.class, manifest))
+          .forEachMethod(
+              new BlessAnnotatedMethodProcessor(Bless.class, manifest))
+          .process(testInstance);
 
     return manifest;
   }
-
 }

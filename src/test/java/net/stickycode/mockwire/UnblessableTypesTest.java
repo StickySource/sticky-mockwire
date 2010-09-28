@@ -16,15 +16,33 @@ import org.junit.Test;
 
 public class UnblessableTypesTest {
 
-  private class NonStaticType {
-
+  private class NonStaticType {}
+  private class NonStaticTypeTest {
+    @Bless NonStaticType hidden;
   }
 
-  @Bless
-  NonStaticType hidden;
+  @Test(expected=UnblessabledTypeException.class)
+  public void checkBlessedStaticInnerTypesError() {
+    // invoke statically so we can assert the exception is expected
+    Mockwire.isolate(new NonStaticTypeTest());
+  }
 
-  @Test(expected=CanNotBlessNonStaticInnerClassException.class)
-  public void usingStaticCallAsItsEasyToVerifyTheException() {
-    Mockwire.isolate(this);
+  private interface Super {}
+  private class CantBlessInterfacesTest {
+    @Bless Super iface;
+  }
+
+  @Test(expected=UnblessabledTypeException.class)
+  public void checkBlessedIntefacesError() {
+    // invoke statically so we can assert the exception is expected
+    Mockwire.isolate(new CantBlessInterfacesTest());
+  }
+
+  private class CantBlessVoidMethodsTest {
+    @Bless void voidMethod() {};
+  }
+  @Test(expected=CannotBlessVoidMethodException.class)
+  public void checkBlessVoidMethodsError() {
+    Mockwire.isolate(new CantBlessVoidMethodsTest());
   }
 }

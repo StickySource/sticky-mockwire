@@ -10,11 +10,10 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-package net.stickycode.mockwire;
+package net.stickycode.mockwire.reflector;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 
 public abstract class AnnotatedFieldProcessor
@@ -28,28 +27,6 @@ public abstract class AnnotatedFieldProcessor
 
   @Override
   public boolean canProcess(Field field) {
-    if (!field.isAnnotationPresent(annotationClass))
-      return false;
-
-    if (!field.getType().isMemberClass())
-      return true;
-
-    if (Modifier.isStatic(field.getType().getModifiers()))
-      return true;
-
-    throw new CanNotBlessNonStaticInnerClassException(
-        "@Bless'd field '{}' on test '{}' has non static inner class '{}' as type. Add static modifier to it so it can be blessed.\n" +
-        "For example\n" +
-        "public class SomeTest {\n" +
-        "  private class InnerType {\n" +
-        "  }\n" +
-        "}\n" +
-        "Should look more like\n" +
-        "public class SomeTest {\n" +
-        "  private static class InnerType {\n" +
-        "  }\n" +
-        "}\n",
-        new Object[] {field.getName(), field.getType().getName()});
+    return field.isAnnotationPresent(annotationClass);
   }
-
 }

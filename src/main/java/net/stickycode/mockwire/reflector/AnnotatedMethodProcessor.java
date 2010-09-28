@@ -10,13 +10,16 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-package net.stickycode.mockwire;
+package net.stickycode.mockwire.reflector;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+
+import net.stickycode.mockwire.MethodDependencyComparator;
+import net.stickycode.mockwire.ParameterSource;
 
 public abstract class AnnotatedMethodProcessor
     implements MethodProcessor {

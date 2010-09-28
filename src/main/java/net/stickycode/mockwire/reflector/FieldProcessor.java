@@ -10,15 +10,15 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
-package net.stickycode.mockwire;
+package net.stickycode.mockwire.reflector;
+
+import java.lang.reflect.Field;
 
 
-@SuppressWarnings("serial")
-public class CanNotBlessNonStaticInnerClassException
-    extends CodingException {
+public interface FieldProcessor {
 
-  public CanNotBlessNonStaticInnerClassException(String message, Object... parameters) {
-    super(message, parameters);
-  }
+  void processField(Object target, Field field);
+
+  boolean canProcess(Field field);
 
 }

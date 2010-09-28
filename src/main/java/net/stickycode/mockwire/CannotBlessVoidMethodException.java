@@ -12,13 +12,13 @@
  */
 package net.stickycode.mockwire;
 
-import java.lang.reflect.Field;
 
+@SuppressWarnings("serial")
+public class CannotBlessVoidMethodException
+    extends CodingException {
 
-public interface FieldProcessor {
-
-  void processField(Object target, Field field);
-
-  boolean canProcess(Field field);
+  public CannotBlessVoidMethodException(String message, Object... parameters) {
+    super(message, parameters);
+  }
 
 }
