@@ -64,8 +64,8 @@ class BlessAnnotatedFieldProcessor
 
   private UnblessabledTypeException cannotBlessInterfacesException(Field field) {
     return new UnblessabledTypeException(
-        "@Bless'd field '{}' on test '{}' is not instantiable with type '{}'. Blessing is used to identify the code you wish to test did you mean @Mock instead?",
-        new Object[] { field.getName(), field.getType().getName() });
+        "@Bless'd field '{}' on test '{}' is not instantiable with type '{}'. Blessing is used to identify the code you wish to test did you mean @Mock or a concrete implementation?",
+        new Object[] { field.getName(), field.getDeclaringClass().getSimpleName(), field.getType().getName()});
   }
 
   private UnblessabledTypeException cannotBlessNonStaticTypesException(Field field) {
@@ -82,6 +82,6 @@ class BlessAnnotatedFieldProcessor
             "  private static class InnerType {\n" +
             "  }\n" +
             "}\n",
-        new Object[] { field.getName(), field.getType().getName() });
+        new Object[] { field.getName(), field.getDeclaringClass().getSimpleName(), field.getType().getName() });
   }
 }
