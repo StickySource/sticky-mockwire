@@ -12,6 +12,8 @@
  */
 package net.stickycode.mockwire;
 
+import net.stickycode.exception.NullParameterException;
+
 
 public final class Mockwire {
 
@@ -24,12 +26,15 @@ public final class Mockwire {
 
   static public void isolate(Object testInstance) {
     if (testInstance == null)
-      throw new CodingException("You passed null when a test instance was expected");
+      throw new NullParameterException("You passed null when a test instance was expected");
 
     new MockwireIsolator(testInstance.getClass()).initialiseTestInstance(testInstance);
   }
 
   static public void contain(Object testInstance) {
+    if (testInstance == null)
+      throw new NullParameterException("You passed null when a test instance was expected");
+    
     new MockwireContained(testInstance.getClass()).initialiseTestInstance(testInstance);
   }
 

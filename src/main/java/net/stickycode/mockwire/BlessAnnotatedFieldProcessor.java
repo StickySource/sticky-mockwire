@@ -51,7 +51,7 @@ class BlessAnnotatedFieldProcessor
       return false;
 
     if (field.getType().isInterface())
-      throw cannotBlessInterfacesException(field);
+      throw new CannotBlessInterfacesException(field);
 
     if (!field.getType().isMemberClass())
       return true;
@@ -59,29 +59,7 @@ class BlessAnnotatedFieldProcessor
     if (Modifier.isStatic(field.getType().getModifiers()))
       return true;
 
-    throw cannotBlessNonStaticTypesException(field);
+    throw new CannotBlessNonStaticTypesException(field);
   }
 
-  private UnblessabledTypeException cannotBlessInterfacesException(Field field) {
-    return new UnblessabledTypeException(
-        "@Bless'd field '{}' on test '{}' is not instantiable with type '{}'. Blessing is used to identify the code you wish to test did you mean @Mock or a concrete implementation?",
-        new Object[] { field.getName(), field.getDeclaringClass().getSimpleName(), field.getType().getName()});
-  }
-
-  private UnblessabledTypeException cannotBlessNonStaticTypesException(Field field) {
-    return new UnblessabledTypeException(
-        "@Bless'd field '{}' on test '{}' has non static inner class '{}' as type. Add static modifier to it so it can be blessed.\n"
-            +
-            "For example\n" +
-            "public class SomeTest {\n" +
-            "  private class InnerType {\n" +
-            "  }\n" +
-            "}\n" +
-            "Should look more like\n" +
-            "public class SomeTest {\n" +
-            "  private static class InnerType {\n" +
-            "  }\n" +
-            "}\n",
-        new Object[] { field.getName(), field.getDeclaringClass().getSimpleName(), field.getType().getName() });
-  }
 }

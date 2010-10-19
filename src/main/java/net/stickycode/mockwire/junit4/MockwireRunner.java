@@ -1,13 +1,13 @@
 package net.stickycode.mockwire.junit4;
 
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
-
 import net.stickycode.mockwire.Bless;
 import net.stickycode.mockwire.Mock;
 import net.stickycode.mockwire.MockwireContained;
 import net.stickycode.mockwire.MockwireContainment;
 import net.stickycode.mockwire.MockwireIsolator;
+
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.InitializationError;
 /**
  * A junit runner to make your test classes and code behave like it would when run live in a di context ala Mockwire.
  *

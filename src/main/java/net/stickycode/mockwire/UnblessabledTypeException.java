@@ -12,10 +12,12 @@
  */
 package net.stickycode.mockwire;
 
+import net.stickycode.exception.PermanentException;
+
 
 @SuppressWarnings("serial")
 public class UnblessabledTypeException
-    extends CodingException {
+    extends PermanentException {
 
   public UnblessabledTypeException(String message, Object... parameters) {
     super(message, parameters);

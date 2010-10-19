@@ -14,6 +14,8 @@ package net.stickycode.mockwire;
 
 import javax.inject.Inject;
 
+import net.stickycode.exception.NullParameterException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +52,7 @@ public abstract class AbstractIsolationTest {
 		assertThat(injected.getAutowirable()).isNotNull();
 	}
 
-	@Test(expected = CodingException.class)
+	@Test(expected = NullParameterException.class)
 	public void nullParameterIsIllegal() {
 		Mockwire.isolate(null);
 	}

@@ -21,7 +21,7 @@ public class UnblessableTypesTest {
     @Bless NonStaticType hidden;
   }
 
-  @Test(expected=UnblessabledTypeException.class)
+  @Test(expected=CannotBlessNonStaticTypesException.class)
   public void checkBlessedStaticInnerTypesError() {
     // invoke statically so we can assert the exception is expected
     Mockwire.isolate(new NonStaticTypeTest());
@@ -32,7 +32,7 @@ public class UnblessableTypesTest {
     @Bless Super iface;
   }
 
-  @Test(expected=UnblessabledTypeException.class)
+  @Test(expected=CannotBlessInterfacesException.class)
   public void checkBlessedIntefacesError() {
     // invoke statically so we can assert the exception is expected
     Mockwire.isolate(new CantBlessInterfacesTest());

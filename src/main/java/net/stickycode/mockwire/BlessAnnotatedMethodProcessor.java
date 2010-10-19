@@ -50,13 +50,9 @@ class BlessAnnotatedMethodProcessor
       return false;
 
     if (method.getReturnType().getName().equals("void"))
-      throw cannotBlessVoidMethodException(method);
+      throw new CannotBlessVoidMethodException(method);
 
     return true;
   }
 
-  private CannotBlessVoidMethodException cannotBlessVoidMethodException(Method method) {
-    return new CannotBlessVoidMethodException("Method {} on test {} is void so you can't bless it as a bean factory method",
-        method.getName(), method.getDeclaringClass().getName());
-  }
 }

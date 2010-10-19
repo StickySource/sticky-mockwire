@@ -1,5 +1,8 @@
 package net.stickycode.mockwire;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
 import net.stickycode.mockwire.junit4.MockwireContext;
@@ -29,14 +32,20 @@ public class MockwireContained
   }
 
   private String[] deriveContainmentRoots(Class<?> testClass2, MockwireContainment containment) {
+    String packageAsPath = packageToPath(testClass.getPackage());
     if (containment == null || containment.value().length == 0)
-      return new String[] { (packageToPath(testClass.getPackage())) };
+      return new String[] { packageAsPath };
 
-    for (String path : containment.value())
+    List<String> paths = new LinkedList<String>();
+    for (String path : containment.value()) {
       if (!path.startsWith("/"))
-        throw new CodingException("The scan root '{}' for containment must start with /", path);
+        throw new ScanRootsShouldStartWithSlashException(path);
 
-    return containment.value();
+      paths.add(path);
+    }
+
+    paths.add(packageAsPath);
+    return paths.toArray(new String[paths.size()]);
   }
 
   private String packageToPath(Package p) {
