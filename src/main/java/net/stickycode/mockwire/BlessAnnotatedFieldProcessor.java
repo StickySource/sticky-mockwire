@@ -28,7 +28,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import net.stickycode.mockwire.reflector.AnnotatedFieldProcessor;
+import net.stickycode.reflector.AnnotatedFieldProcessor;
 
 class BlessAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {

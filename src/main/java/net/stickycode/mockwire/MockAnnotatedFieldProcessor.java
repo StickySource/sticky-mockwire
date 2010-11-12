@@ -27,7 +27,7 @@ package net.stickycode.mockwire;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import net.stickycode.mockwire.reflector.AnnotatedFieldProcessor;
+import net.stickycode.reflector.AnnotatedFieldProcessor;
 
 class MockAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {

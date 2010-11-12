@@ -3,7 +3,7 @@ package net.stickycode.mockwire;
 import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
 import net.stickycode.mockwire.junit4.MockwireContext;
-import net.stickycode.mockwire.reflector.Reflector;
+import net.stickycode.reflector.Reflector;
 
 public class MockwireIsolator
     implements MockwireContext {
