@@ -37,7 +37,7 @@ class BlessAnnotatedMethodProcessor
 
   private final IsolatedTestManifest manifest;
 
-  BlessAnnotatedMethodProcessor(Class<? extends Annotation> annotation, IsolatedTestManifest manifest) {
+  BlessAnnotatedMethodProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
     super(annotation);
     this.manifest = manifest;
   }

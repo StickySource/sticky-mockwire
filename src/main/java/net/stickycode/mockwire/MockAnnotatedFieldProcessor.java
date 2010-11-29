@@ -35,7 +35,7 @@ class MockAnnotatedFieldProcessor
   private final IsolatedTestManifest manifest;
   private final Mocker mocker;
 
-  MockAnnotatedFieldProcessor(Class<? extends Annotation> annotation, IsolatedTestManifest manifest, Mocker mocker) {
+  MockAnnotatedFieldProcessor(IsolatedTestManifest manifest, Mocker mocker, Class<? extends Annotation>... annotation) {
     super(annotation);
     this.manifest = manifest;
     this.mocker = mocker;

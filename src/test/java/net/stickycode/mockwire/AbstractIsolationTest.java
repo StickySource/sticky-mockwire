@@ -26,10 +26,10 @@ public abstract class AbstractIsolationTest {
 	@Mock
 	private Mockable m;
 
-	@Bless
+	@UnderTest
 	private Autowirable a;
 
-	@Bless
+	@UnderTest
 	private AutowirableWithDependencies d;
 
 	@Inject

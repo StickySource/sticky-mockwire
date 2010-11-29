@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(MockwireRunner.class)
-@MockwireContainment
+@MockwireContainment("/net/stickycode/")
 public class ContainmentTest {
 
   @Inject

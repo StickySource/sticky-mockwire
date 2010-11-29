@@ -18,6 +18,7 @@ public class UnblessableTypesTest {
 
   private class NonStaticType {}
   private class NonStaticTypeTest {
+    @SuppressWarnings("unused")
     @Bless NonStaticType hidden;
   }
 
@@ -29,6 +30,7 @@ public class UnblessableTypesTest {
 
   private interface Super {}
   private class CantBlessInterfacesTest {
+    @SuppressWarnings("unused")
     @Bless Super iface;
   }
 
@@ -39,6 +41,7 @@ public class UnblessableTypesTest {
   }
 
   private class CantBlessVoidMethodsTest {
+    @SuppressWarnings("unused")
     @Bless void voidMethod() {};
   }
   @Test(expected=CannotBlessVoidMethodException.class)
