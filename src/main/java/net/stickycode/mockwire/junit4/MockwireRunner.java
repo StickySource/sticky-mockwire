@@ -1,17 +1,16 @@
 package net.stickycode.mockwire.junit4;
 
-import net.stickycode.mockwire.Bless;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.InitializationError;
+
 import net.stickycode.mockwire.Controlled;
-import net.stickycode.mockwire.Mock;
 import net.stickycode.mockwire.MockwireContained;
 import net.stickycode.mockwire.MockwireContainment;
 import net.stickycode.mockwire.MockwireIsolator;
 import net.stickycode.mockwire.UnderTest;
 
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
 /**
- * A junit runner to make your test classes and code behave like it would when run live in a di context ala Mockwire.
+ * A jUnit runner to make your test classes and code behave like it would when run live in a di context ala Mockwire.
  *
  * The default context used for Dependency Injection is a manifest defined by the test class itself. It will only contain
  * {@link UnderTest code under test} and {@link Controlled controlled} classes in the actual test class or its super types.

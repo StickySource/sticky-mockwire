@@ -34,7 +34,7 @@ public final class Mockwire {
   static public void contain(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
-    
+
     new MockwireContained(testInstance.getClass()).initialiseTestInstance(testInstance);
   }
 
