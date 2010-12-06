@@ -4,9 +4,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 import net.stickycode.mockwire.Controlled;
-import net.stickycode.mockwire.MockwireContained;
-import net.stickycode.mockwire.MockwireContainment;
-import net.stickycode.mockwire.MockwireIsolator;
+import net.stickycode.mockwire.MockwireContext;
 import net.stickycode.mockwire.UnderTest;
 
 /**
@@ -43,11 +41,7 @@ public class MockwireRunner extends BlockJUnit4ClassRunner {
 
   public MockwireRunner(Class<?> testClass) throws InitializationError {
     super(testClass);
-    MockwireContainment containment = testClass.getAnnotation(MockwireContainment.class);
-    if (containment == null)
-      mockwire = new MockwireIsolator(testClass);
-    else
-      mockwire = new MockwireContained(testClass, containment);
+    mockwire = new MockwireContext(testClass);
   }
 
   @Override

@@ -14,8 +14,8 @@ package net.stickycode.mockwire.configured;
 
 import org.junit.Test;
 
+import net.stickycode.mockwire.ClasspathResourceNotFoundException;
 import net.stickycode.mockwire.configured.MockwireConfigurationSource;
-import net.stickycode.mockwire.spring30.ClasspathResourceNotFoundException;
 
 import static org.fest.assertions.Assertions.assertThat;
 

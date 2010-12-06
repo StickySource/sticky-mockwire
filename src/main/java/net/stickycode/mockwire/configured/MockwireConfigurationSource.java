@@ -16,13 +16,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.springframework.core.io.ClassPathResource;
-
 import net.stickycode.configured.ConfigurationSource;
-import net.stickycode.mockwire.spring30.ClasspathResourceNotFoundException;
+import net.stickycode.mockwire.ClasspathResourceNotFoundException;
 
 
 public class MockwireConfigurationSource
