@@ -43,6 +43,6 @@ class MockAnnotatedFieldProcessor
 
   @Override
   public void processField(Object target, Field field) {
-    manifest.registerBean(field.getName(), mocker.mock(field.getType()), field.getType());
+    manifest.registerBean(field.getName(), mocker.mock(field.getName(), field.getType()), field.getType());
   }
 }
