@@ -54,7 +54,9 @@ public class MockwireContained
 
   @Override
   public void initialiseTestInstance(Object testInstance) {
+    // XXX move this call outside the isolator to allow for testing
     Mocker mocker = MockerFactoryLoader.load();
+    // XXX move this call outside the isolator to allow for testing
     IsolatedTestManifest manifest = TestManifestFactoryLoader.load();
 
     manifest.scanPackages(scanRoots);
