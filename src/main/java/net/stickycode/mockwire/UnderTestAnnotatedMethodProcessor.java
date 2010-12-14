@@ -32,12 +32,12 @@ import java.util.List;
 
 import net.stickycode.reflector.AnnotatedMethodProcessor;
 
-class BlessAnnotatedMethodProcessor
+class UnderTestAnnotatedMethodProcessor
     extends AnnotatedMethodProcessor {
 
   private final IsolatedTestManifest manifest;
 
-  BlessAnnotatedMethodProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
+  UnderTestAnnotatedMethodProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
     super(annotation);
     this.manifest = manifest;
   }
@@ -53,7 +53,7 @@ class BlessAnnotatedMethodProcessor
       return false;
 
     if (method.getReturnType().getName().equals("void"))
-      throw new CannotBlessVoidMethodException(method);
+      throw new VoidMethodsCannotBeUsedAsFactoriesForCodeUnderTestException(method);
 
     return true;
   }

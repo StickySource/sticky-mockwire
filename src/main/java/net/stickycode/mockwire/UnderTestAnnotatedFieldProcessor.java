@@ -30,12 +30,12 @@ import java.lang.reflect.Modifier;
 
 import net.stickycode.reflector.AnnotatedFieldProcessor;
 
-class BlessAnnotatedFieldProcessor
+class UnderTestAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
 
   private final IsolatedTestManifest manifest;
 
-  BlessAnnotatedFieldProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
+  UnderTestAnnotatedFieldProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
     super(annotation);
     this.manifest = manifest;
   }

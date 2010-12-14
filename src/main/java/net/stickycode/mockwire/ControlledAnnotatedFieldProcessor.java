@@ -29,13 +29,13 @@ import java.lang.reflect.Field;
 
 import net.stickycode.reflector.AnnotatedFieldProcessor;
 
-class MockAnnotatedFieldProcessor
+class ControlledAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
 
   private final IsolatedTestManifest manifest;
   private final Mocker mocker;
 
-  MockAnnotatedFieldProcessor(IsolatedTestManifest manifest, Mocker mocker, Class<? extends Annotation>... annotation) {
+  ControlledAnnotatedFieldProcessor(IsolatedTestManifest manifest, Mocker mocker, Class<? extends Annotation>... annotation) {
     super(annotation);
     this.manifest = manifest;
     this.mocker = mocker;

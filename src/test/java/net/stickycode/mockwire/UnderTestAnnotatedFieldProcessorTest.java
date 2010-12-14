@@ -20,31 +20,16 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class UnderTestAnnotatedFieldProcessorTest {
 
-  public static class StaticMember {
-  }
-
-  public class NonStaticMember {
-  }
-
-  public interface Interface {
-  }
-
   @UnderTest
   String underTest;
 
-  @UnderTest
-  StaticMember staticMember;
+  public static class StaticMember {}
+  @UnderTest StaticMember staticMember;
 
   String other;
 
   @Controlled
   String controlled;
-
-  @UnderTest
-  Interface iface;
-
-  @UnderTest
-  NonStaticMember nonStatic;
 
   @Test
   public void annotationDetection() {
@@ -54,15 +39,24 @@ public class UnderTestAnnotatedFieldProcessorTest {
     assertThat(canProcess("staticMember")).isTrue();
   }
 
+
+  public interface Interface {}
+  @UnderTest Interface iface;
+
   @Test(expected=InterfacesCannotBePutUnderTestException.class)
   public void interfacesError() {
     canProcess("iface");
   }
 
+
+  public class NonStaticMember {}
+  @UnderTest NonStaticMember nonStatic;
+
   @Test(expected=NonStaticMemberTypesCannotBePutUnderTestException.class)
   public void nonStaticMemberTypesNotInstantiable() {
     canProcess("nonStatic");
   }
+
 
   private boolean canProcess(String name) {
     Field f = getField(name);
@@ -70,8 +64,8 @@ public class UnderTestAnnotatedFieldProcessorTest {
   }
 
   @SuppressWarnings("unchecked")
-  private BlessAnnotatedFieldProcessor underTestProcessor() {
-    return new BlessAnnotatedFieldProcessor(null, UnderTest.class);
+  private UnderTestAnnotatedFieldProcessor underTestProcessor() {
+    return new UnderTestAnnotatedFieldProcessor(null, UnderTest.class);
   }
 
   private Field getField(String name) {

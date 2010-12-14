@@ -18,14 +18,14 @@ import net.stickycode.exception.PermanentException;
 
 
 @SuppressWarnings("serial")
-public class CannotBlessVoidMethodException
+public class VoidMethodsCannotBeUsedAsFactoriesForCodeUnderTestException
     extends PermanentException {
 
-  public CannotBlessVoidMethodException(String message, Object... parameters) {
+  public VoidMethodsCannotBeUsedAsFactoriesForCodeUnderTestException(String message, Object... parameters) {
     super(message, parameters);
   }
 
-  public CannotBlessVoidMethodException(Method method) {
+  public VoidMethodsCannotBeUsedAsFactoriesForCodeUnderTestException(Method method) {
     super("Method {} on test {} is void so you can't bless it as a bean factory method",
     method.getName(),
     method.getDeclaringClass().getSimpleName());

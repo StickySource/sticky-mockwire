@@ -107,13 +107,14 @@ public class MockwireContext {
     return sources;
   }
 
+  @SuppressWarnings("unchecked")
   private IsolatedTestManifest process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
     new Reflector()
           .forEachField(
-              new MockAnnotatedFieldProcessor(manifest, mocker, Controlled.class, Mock.class),
-              new BlessAnnotatedFieldProcessor(manifest, UnderTest.class, Bless.class))
+              new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class, Mock.class),
+              new UnderTestAnnotatedFieldProcessor(manifest, UnderTest.class, Bless.class))
           .forEachMethod(
-              new BlessAnnotatedMethodProcessor(manifest, UnderTest.class, Bless.class))
+              new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class, Bless.class))
           .process(testInstance);
 
     return manifest;
