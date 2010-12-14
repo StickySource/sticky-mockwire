@@ -52,20 +52,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.stickycode.mockwire</groupId>
-			<artifactId>sticky-mockwire-mockito</artifactId>
-			<version>[2,3)</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.stickycode.mockwire</groupId>
-			<artifactId>sticky-mockwire-spring30</artifactId>
-			<version>[3,4)</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.stickycode</groupId>
 			<artifactId>sticky-reflector</artifactId>
 			<version>[1,2)</version>

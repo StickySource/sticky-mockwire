@@ -5,10 +5,10 @@ import java.lang.reflect.Field;
 import net.stickycode.exception.PermanentException;
 
 @SuppressWarnings("serial")
-public class CannotBlessInterfacesException
+public class InterfacesCannotBePutUnderTestException
     extends PermanentException {
 
-  public CannotBlessInterfacesException(Field field) {
+  public InterfacesCannotBePutUnderTestException(Field field) {
     super("@Bless'd field '{}' on test '{}' " +
         "is not instantiable with type '{}'. " +
         "Blessing is used to identify the code you " +

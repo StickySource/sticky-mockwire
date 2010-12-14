@@ -5,10 +5,10 @@ import java.lang.reflect.Field;
 import net.stickycode.exception.PermanentException;
 
 @SuppressWarnings("serial")
-public class CannotBlessNonStaticTypesException
+public class NonStaticMemberTypesCannotBePutUnderTestException
     extends PermanentException {
 
-  public CannotBlessNonStaticTypesException(Field field) {
+  public NonStaticMemberTypesCannotBePutUnderTestException(Field field) {
     super("@Bless'd field '{}' on test '{}' has non static inner class '{}' as type. " +
           "Add a static modifier to it so it can be blessed.\n" +
           "For example\n" +

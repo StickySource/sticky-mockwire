@@ -51,7 +51,7 @@ class BlessAnnotatedFieldProcessor
       return false;
 
     if (field.getType().isInterface())
-      throw new CannotBlessInterfacesException(field);
+      throw new InterfacesCannotBePutUnderTestException(field);
 
     if (!field.getType().isMemberClass())
       return true;
@@ -59,7 +59,7 @@ class BlessAnnotatedFieldProcessor
     if (Modifier.isStatic(field.getType().getModifiers()))
       return true;
 
-    throw new CannotBlessNonStaticTypesException(field);
+    throw new NonStaticMemberTypesCannotBePutUnderTestException(field);
   }
 
 }
