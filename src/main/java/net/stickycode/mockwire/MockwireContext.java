@@ -3,6 +3,10 @@ package net.stickycode.mockwire;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
+
 import net.stickycode.configured.ConfigurationSource;
 import net.stickycode.configured.ConfigurationSystem;
 import net.stickycode.configured.source.EnvironmentConfigurationSource;
@@ -15,6 +19,8 @@ import net.stickycode.reflector.Reflector;
 
 public class MockwireContext {
 
+  private final Logger log = LoggerFactory.getLogger(getClass());
+
   private static final String version;
 
   static {
@@ -25,6 +31,8 @@ public class MockwireContext {
   private final Class<?> testClass;
   private final String[] scanRoots;
   private final List<ConfigurationSource> configurationSources;
+  private Mocker mocker;
+  private IsolatedTestManifest manifest;
 
   public MockwireContext(Class<?> testClass) {
     this.testClass = testClass;
@@ -58,24 +66,13 @@ public class MockwireContext {
   }
 
   public void initialiseTestInstance(Object testInstance) {
-    // XXX move this call outside the isolator to allow for testing
-    Mocker mocker = MockerFactoryLoader.load();
-    // XXX move this call outside the isolator to allow for testing
-    IsolatedTestManifest manifest = TestManifestFactoryLoader.load();
-
-    if (scanRoots != null)
-      manifest.scanPackages(scanRoots);
-
-    if (configurationSources != null)
-      configure(manifest, testInstance);
-
     process(manifest, mocker, testInstance);
-    manifest.autowire(testInstance);
+    manifest.prepareTest(testInstance);
   }
 
-  private void configure(IsolatedTestManifest manifest, Object testInstance) {
+  private void configure() {
     if (manifest.hasRegisteredType(ConfigurationSystem.class))
-      throw new ConfigurationSystemWasScannedOrDefinedAlready(testInstance);
+      throw new ConfigurationSystemWasScannedOrDefinedAlready(testClass);
 
     ConfigurationSystem system = new ConfigurationSystem();
     for (ConfigurationSource s : configurationSources) {
@@ -85,7 +82,7 @@ public class MockwireContext {
     manifest.registerConfigurationSystem("configurationSystem", system, system.getClass());
   }
 
-  private List<ConfigurationSource> deriveConfigurationSources(Class<?> testClass) {
+  List<ConfigurationSource> deriveConfigurationSources(Class<?> testClass) {
     MockwireConfigured configured = testClass.getAnnotation(MockwireConfigured.class);
     if (configured == null)
       return null;
@@ -108,15 +105,43 @@ public class MockwireContext {
   }
 
   @SuppressWarnings("unchecked")
-  private IsolatedTestManifest process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
+  private void process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
+    log.debug("processing test {}", testInstance);
     new Reflector()
-          .forEachField(
-              new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class, Mock.class),
-              new UnderTestAnnotatedFieldProcessor(manifest, UnderTest.class, Bless.class))
           .forEachMethod(
               new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class, Bless.class))
           .process(testInstance);
 
-    return manifest;
+  }
+
+  @SuppressWarnings("unchecked")
+  private void process(final IsolatedTestManifest manifest, final Mocker mocker) {
+    log.debug("processing test class {}", testClass);
+    new Reflector()
+        .forEachField(
+            new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class, Mock.class),
+            new UnderTestAnnotatedFieldProcessor(manifest, UnderTest.class, Bless.class))
+            .process(testClass);
+  }
+
+  public void startup() {
+    log.debug("startup {}", testClass);
+    mocker = MockerFactoryLoader.load();
+    manifest = TestManifestFactoryLoader.load();
+
+    if (scanRoots != null)
+      manifest.scanPackages(scanRoots);
+
+    if (configurationSources != null)
+      configure();
+
+    process(manifest, mocker);
+
+    manifest.startup(testClass);
+  }
+
+  public void shutdown() {
+    manifest.shutdown();
+    log.debug("shutdown {}", testClass);
   }
 }

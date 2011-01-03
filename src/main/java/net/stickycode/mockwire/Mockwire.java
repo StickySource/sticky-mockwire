@@ -28,14 +28,20 @@ public final class Mockwire {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
 
-    new MockwireContext(testInstance.getClass()).initialiseTestInstance(testInstance);
+    MockwireContext mockwireContext = new MockwireContext(testInstance.getClass());
+    mockwireContext.startup();
+    mockwireContext.initialiseTestInstance(testInstance);
+    mockwireContext.shutdown();
   }
 
   static public void contain(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
 
-    new MockwireContext(testInstance.getClass()).initialiseTestInstance(testInstance);
+    MockwireContext mockwireContext = new MockwireContext(testInstance.getClass());
+    mockwireContext.startup();
+    mockwireContext.initialiseTestInstance(testInstance);
+    mockwireContext.shutdown();
   }
 
 }

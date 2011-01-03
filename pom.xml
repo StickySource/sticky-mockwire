@@ -23,7 +23,7 @@
 
 	<groupId>net.stickycode.mockwire</groupId>
 	<artifactId>sticky-mockwire</artifactId>
-	<version>3.2-SNAPSHOT</version>
+	<version>4.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>sticky-mockwire</name>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>net.stickycode.mockwire</groupId>
 			<artifactId>sticky-mockwire-api</artifactId>
-			<version>[3,4)</version>
+			<version>[4,5)</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

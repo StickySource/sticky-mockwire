@@ -37,17 +37,32 @@ import net.stickycode.mockwire.UnderTest;
  */
 public class MockwireRunner extends BlockJUnit4ClassRunner {
 
-  private MockwireContext mockwire;
+  private final MockwireContext mockwire;
 
   public MockwireRunner(Class<?> testClass) throws InitializationError {
     super(testClass);
     mockwire = new MockwireContext(testClass);
   }
 
+// @Override
+//  protected Statement withAfterClasses(final Statement statement) {
+//    final Statement s = super.withAfterClasses(statement);
+//    return new Statement() {
+//
+//      @Override
+//      public void evaluate() throws Throwable {
+//        s.evaluate();
+//      }
+//
+//    };
+//  }
+
   @Override
   protected Object createTest() throws Exception {
+    mockwire.startup();
     Object test = super.createTest();
     mockwire.initialiseTestInstance(test);
+    mockwire.shutdown();
     return test;
   }
 
