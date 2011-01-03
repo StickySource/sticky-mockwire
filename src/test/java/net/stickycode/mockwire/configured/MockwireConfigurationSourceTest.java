@@ -23,6 +23,10 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class MockwireConfigurationSourceTest {
 
+  private class PrivateMemberClass {
+
+  }
+
   @Test
   public void stringProperties() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
@@ -34,7 +38,6 @@ public class MockwireConfigurationSourceTest {
     s.add(getClass(), "c=d");
     assertThat(s.hasValue("c")).isTrue();
     assertThat(s.getValue("c")).isEqualTo("d");
-
   }
 
   @Test
@@ -50,4 +53,23 @@ public class MockwireConfigurationSourceTest {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(getClass(), "whereisit.properties");
   }
+
+  @Test
+  public void filePropertiesFromMemberClass() {
+    MockwireConfigurationSource s = new MockwireConfigurationSource();
+    s.add(new PrivateMemberClass().getClass(), "configured.properties");
+    assertThat(s.hasValue("ainfile")).isTrue();
+    assertThat(s.getValue("ainfile")).isEqualTo("binfile");
+  }
+
+  @Test
+  public void filePropertiesFromManyClasses() {
+    MockwireConfigurationSource s = new MockwireConfigurationSource();
+    s.add(getClass(), new String[]{"configured.properties", "configured2.properties"});
+    assertThat(s.hasValue("ainfile")).isTrue();
+    assertThat(s.getValue("ainfile")).isEqualTo("binfile");
+    assertThat(s.hasValue("ainfile2")).isTrue();
+    assertThat(s.getValue("ainfile2")).isEqualTo("binfile2");
+  }
+
 }
