@@ -18,12 +18,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.stickycode.configured.ConfigurationSource;
 import net.stickycode.mockwire.ClasspathResourceNotFoundException;
 
 
 public class MockwireConfigurationSource
     implements ConfigurationSource {
+
+  private Logger log = LoggerFactory.getLogger(getClass());
 
   private Map<String, String> configuration = new HashMap<String, String>();
 
@@ -35,6 +40,12 @@ public class MockwireConfigurationSource
   @Override
   public String getValue(String key) {
     return configuration.get(key);
+  }
+
+  public void add(Class<?> testClass, String[] value) {
+    for (String s : value) {
+      add(testClass, s);
+    }
   }
 
   public void add(Class<?> testClass, String s) {
@@ -53,17 +64,14 @@ public class MockwireConfigurationSource
   }
 
   void loadClasspathResource(Class<?> testClass, String resource) {
-    InputStream i = testClass.getResourceAsStream(resource);
-    if (i == null)
-      throw new ClasspathResourceNotFoundException(resource);
+    InputStream i = getResourceStream(testClass, resource);
+    Properties p;
 
-    Properties p = new Properties();
     try {
-      p.load(i);
-      i.close();
+      p = loadProperties(resource, i);
     }
-    catch (IOException e) {
-      throw new ClasspathResourceNotFoundException(e, resource);
+    finally {
+      closeStream(i, testClass, resource);
     }
 
     for (String name : p.stringPropertyNames()) {
@@ -71,15 +79,36 @@ public class MockwireConfigurationSource
     }
   }
 
+  void closeStream(InputStream i, Class<?> testClass, String resource) {
+    try {
+      i.close();
+    }
+    catch (IOException e) {
+      log.warn("Failed to close input stream of {} on {}. Assuming thats not a critical failure and ignoring.", new Object[] {resource, testClass.getName(), e});
+    }
+  }
+
+  Properties loadProperties(String resource, InputStream i) {
+    try {
+      Properties p = new Properties();
+      p.load(i);
+      return p;
+    }
+    catch (IOException e) {
+      throw new ClasspathResourceNotFoundException(e, resource);
+    }
+  }
+
+  private InputStream getResourceStream(Class<?> testClass, String resource) {
+    InputStream i = testClass.getResourceAsStream(resource);
+    if (i == null)
+      throw new ClasspathResourceNotFoundException(resource);
+    return i;
+  }
+
   private void addValue(String key, String value) {
     configuration.put(key, value);
   }
 
-  public void add(Class<?> testClass, String[] value) {
-    for (String s : value) {
-      add(testClass, s);
-    }
-
-  }
 
 }
