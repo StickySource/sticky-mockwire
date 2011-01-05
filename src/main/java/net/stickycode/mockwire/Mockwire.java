@@ -24,24 +24,24 @@ public final class Mockwire {
     System.out.println("Using Mockwire v" + version + " see http://stickycode.net/mockwire");
   }
 
-  static public void isolate(Object testInstance) {
+  static public MockwireContext isolate(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
 
     MockwireContext mockwireContext = new MockwireContext(testInstance.getClass());
     mockwireContext.startup();
     mockwireContext.initialiseTestInstance(testInstance);
-    mockwireContext.shutdown();
+    return mockwireContext;
   }
 
-  static public void contain(Object testInstance) {
+  static public MockwireContext contain(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
 
     MockwireContext mockwireContext = new MockwireContext(testInstance.getClass());
     mockwireContext.startup();
     mockwireContext.initialiseTestInstance(testInstance);
-    mockwireContext.shutdown();
+    return mockwireContext;
   }
 
 }

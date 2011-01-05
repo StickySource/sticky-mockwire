@@ -66,6 +66,7 @@ public class MockwireContext {
   }
 
   public void initialiseTestInstance(Object testInstance) {
+    log.debug("initialising test {}", testInstance);
     process(manifest, mocker, testInstance);
     manifest.prepareTest(testInstance);
   }
@@ -143,5 +144,9 @@ public class MockwireContext {
   public void shutdown() {
     manifest.shutdown();
     log.debug("shutdown {}", testClass);
+  }
+
+  public boolean isolateLifecycles() {
+    return false;
   }
 }
