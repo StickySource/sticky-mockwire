@@ -110,7 +110,7 @@ public class MockwireContext {
     log.debug("processing test {}", testInstance);
     new Reflector()
           .forEachMethod(
-              new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class, Bless.class))
+              new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class))
           .process(testInstance);
 
   }
@@ -120,8 +120,8 @@ public class MockwireContext {
     log.debug("processing test class {}", testClass);
     new Reflector()
         .forEachField(
-            new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class, Mock.class),
-            new UnderTestAnnotatedFieldProcessor(manifest, UnderTest.class, Bless.class))
+            new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class),
+            new UnderTestAnnotatedFieldProcessor(manifest, UnderTest.class, Uncontrolled.class))
             .process(testClass);
   }
 
