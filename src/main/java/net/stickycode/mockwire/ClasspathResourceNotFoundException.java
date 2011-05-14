@@ -25,6 +25,10 @@ public class ClasspathResourceNotFoundException
     super("Resource {} cound not be found in the classpath", resource);
   }
 
+  public ClasspathResourceNotFoundException(Class<?> base, String resource) {
+    super("Resource {} cound not be found in the classpath in package {}", resource, base.getPackage().getName());
+  }
+
   public ClasspathResourceNotFoundException(IOException e, String resource) {
     super(e, "Resource {} cound not be found in the classpath", resource);
   }
