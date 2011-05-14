@@ -102,7 +102,7 @@ public class MockwireConfigurationSource
   private InputStream getResourceStream(Class<?> testClass, String resource) {
     InputStream i = testClass.getResourceAsStream(resource);
     if (i == null)
-      throw new ClasspathResourceNotFoundException(resource);
+      throw new ClasspathResourceNotFoundException(testClass, resource);
     return i;
   }
 
