@@ -3,9 +3,8 @@ package net.stickycode.mockwire;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.LoggerFactory;
-
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.stickycode.configured.ConfigurationSource;
 import net.stickycode.configured.ConfigurationSystem;
@@ -66,21 +65,18 @@ public class MockwireContext {
   }
 
   public void initialiseTestInstance(Object testInstance) {
-    log.debug("initialising test {}", testInstance);
+    log.debug("initialising test '{}'", testInstance);
     process(manifest, mocker, testInstance);
     manifest.prepareTest(testInstance);
+    if (configurationSources != null)
+      manifest.configure();
   }
 
   private void configure() {
     if (manifest.hasRegisteredType(ConfigurationSystem.class))
       throw new ConfigurationSystemWasScannedOrDefinedAlready(testClass);
 
-    ConfigurationSystem system = new ConfigurationSystem();
-    for (ConfigurationSource s : configurationSources) {
-      system.add(s);
-    }
-
-    manifest.registerConfigurationSystem("configurationSystem", system, system.getClass());
+    manifest.registerConfiguationSystem(configurationSources);
   }
 
   List<ConfigurationSource> deriveConfigurationSources(Class<?> testClass) {
@@ -107,7 +103,7 @@ public class MockwireContext {
 
   @SuppressWarnings("unchecked")
   private void process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
-    log.debug("processing test {}", testInstance);
+    log.debug("processing test instance '{}'", testInstance);
     new Reflector()
           .forEachMethod(
               new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class))
@@ -117,7 +113,7 @@ public class MockwireContext {
 
   @SuppressWarnings("unchecked")
   private void process(final IsolatedTestManifest manifest, final Mocker mocker) {
-    log.debug("processing test class {}", testClass);
+    log.debug("processing test class '{}'", testClass);
     new Reflector()
         .forEachField(
             new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class),
@@ -147,6 +143,6 @@ public class MockwireContext {
   }
 
   public boolean isolateLifecycles() {
-    return false;
+    return true;
   }
 }
