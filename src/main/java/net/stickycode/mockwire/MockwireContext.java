@@ -50,7 +50,7 @@ public class MockwireContext {
 
     List<String> paths = new LinkedList<String>();
     for (String path : containment.value()) {
-      if (!path.startsWith("/"))
+      if (path.indexOf('/') > -1 && !path.startsWith("/"))
         throw new ScanRootsShouldStartWithSlashException(path);
 
       paths.add(path);
