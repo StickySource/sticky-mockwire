@@ -1,17 +1,14 @@
 package net.stickycode.mockwire.junit4;
 
-import java.util.List;
+import net.stickycode.mockwire.Controlled;
+import net.stickycode.mockwire.MockwireContext;
+import net.stickycode.mockwire.UnderTest;
 
-import org.junit.rules.MethodRule;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-
-import net.stickycode.mockwire.Controlled;
-import net.stickycode.mockwire.MockwireContext;
-import net.stickycode.mockwire.UnderTest;
 
 /**
  * A jUnit runner to make your test classes and code behave like it would when run live in a di context ala Mockwire.
@@ -42,6 +39,25 @@ import net.stickycode.mockwire.UnderTest;
  * </pre>
  */
 public class MockwireRunner extends BlockJUnit4ClassRunner {
+
+  private final class MockwireTestMethodLifecycleStatement
+      extends Statement {
+
+    private final Statement statement;
+
+    private final Object test;
+
+    private MockwireTestMethodLifecycleStatement(Statement statement, Object test) {
+      this.statement = statement;
+      this.test = test;
+    }
+
+    @Override
+    public void evaluate() throws Throwable {
+      mockwire.initialiseTestInstance(test);
+      statement.evaluate();
+    }
+  }
 
   private final class MockwireContextLifecycleStatement
       extends Statement {
@@ -76,33 +92,15 @@ public class MockwireRunner extends BlockJUnit4ClassRunner {
   }
 
   @Override
-  protected List<MethodRule> rules(Object test) {
+  protected Statement methodBlock(FrameworkMethod method) {
     if (!mockwire.isolateLifecycles())
-      return super.rules(test);
+      return super.methodBlock(method);
 
-    List<MethodRule> rules = super.rules(test);
-    rules.add(new MethodRule() {
-
-      @Override
-      public Statement apply(final Statement base, FrameworkMethod method, final Object target) {
-        return new MockwireContextLifecycleStatement(base);
-      }
-    });
-    return rules;
+    return new MockwireContextLifecycleStatement(super.methodBlock(method));
   }
-
-
 
   @Override
   protected Statement methodInvoker(FrameworkMethod method, final Object test) {
-    final Statement statement = super.methodInvoker(method, test);
-    return new Statement() {
-
-      @Override
-      public void evaluate() throws Throwable {
-        mockwire.initialiseTestInstance(test);
-        statement.evaluate();
-      }
-    };
+    return new MockwireTestMethodLifecycleStatement(super.methodInvoker(method, test), test);
   }
 }

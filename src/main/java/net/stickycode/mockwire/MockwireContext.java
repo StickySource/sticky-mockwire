@@ -65,6 +65,9 @@ public class MockwireContext {
   }
 
   public void initialiseTestInstance(Object testInstance) {
+    if (manifest == null)
+      throw new IllegalStateException("startup has not been called");
+
     log.debug("initialising test '{}'", testInstance);
     process(manifest, mocker, testInstance);
     manifest.prepareTest(testInstance);
