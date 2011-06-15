@@ -3,20 +3,22 @@ package net.stickycode.mockwire;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.stickycode.configured.ConfigurationSource;
 import net.stickycode.configured.ConfigurationSystem;
 import net.stickycode.configured.source.EnvironmentConfigurationSource;
 import net.stickycode.configured.source.SystemPropertiesConfigurationSource;
 import net.stickycode.mockwire.MockwireConfigured.Priority;
+import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor.MockwireConfigurationSourceProvider;
 import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
 import net.stickycode.mockwire.configured.MockwireConfigurationSource;
 import net.stickycode.reflector.Reflector;
 
-public class MockwireContext {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MockwireContext 
+  implements MockwireConfigurationSourceProvider {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -29,9 +31,11 @@ public class MockwireContext {
 
   private final Class<?> testClass;
   private final String[] scanRoots;
-  private final List<ConfigurationSource> configurationSources;
+  private List<ConfigurationSource> configurationSources;
   private Mocker mocker;
   private IsolatedTestManifest manifest;
+
+  private MockwireConfigurationSource source;
 
   public MockwireContext(Class<?> testClass) {
     this.testClass = testClass;
@@ -75,7 +79,7 @@ public class MockwireContext {
       manifest.configure();
   }
 
-  private void configure() {
+  private void registerConfigurationSources() {
     if (manifest.hasRegisteredType(ConfigurationSystem.class))
       throw new ConfigurationSystemWasScannedOrDefinedAlready(testClass);
 
@@ -91,7 +95,7 @@ public class MockwireContext {
     if (configured.useSystemProperties() == Priority.First)
       sources.add(new SystemPropertiesConfigurationSource());
 
-    MockwireConfigurationSource source = new MockwireConfigurationSource();
+    source = new MockwireConfigurationSource();
     source.add(testClass, configured.value());
     sources.add(source);
 
@@ -120,7 +124,7 @@ public class MockwireContext {
     new Reflector()
         .forEachField(
             new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class),
-            new UnderTestAnnotatedFieldProcessor(manifest, UnderTest.class, Uncontrolled.class))
+            new UnderTestAnnotatedFieldProcessor(manifest, this, UnderTest.class, Uncontrolled.class))
             .process(testClass);
   }
 
@@ -133,7 +137,7 @@ public class MockwireContext {
       manifest.scanPackages(scanRoots);
 
     if (configurationSources != null)
-      configure();
+      registerConfigurationSources();
 
     process(manifest, mocker);
 
@@ -147,5 +151,19 @@ public class MockwireContext {
 
   public boolean isolateLifecycles() {
     return true;
+  }
+
+  public MockwireConfigurationSource getConfigurationSource() {
+    if (source != null)
+      return source;
+    
+    source = new MockwireConfigurationSource();
+    configurationSources = new LinkedList<ConfigurationSource>();
+    configurationSources.add(source);
+    
+    registerConfigurationSources();
+    
+    return source;
+    
   }
 }

@@ -24,25 +24,76 @@
  */
 package net.stickycode.mockwire;
 
+import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import net.stickycode.mockwire.configured.MockwireConfigurationSource;
 import net.stickycode.reflector.AnnotatedFieldProcessor;
+import net.stickycode.stereotype.Configured;
 
-class UnderTestAnnotatedFieldProcessor
+public class UnderTestAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
+  
+  public static interface MockwireConfigurationSourceProvider {
+     MockwireConfigurationSource getConfigurationSource();
+  }
 
   private final IsolatedTestManifest manifest;
+  private final MockwireConfigurationSourceProvider configurationSource;
 
-  UnderTestAnnotatedFieldProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
+  public UnderTestAnnotatedFieldProcessor(IsolatedTestManifest manifest, MockwireConfigurationSourceProvider configurationSource, Class<? extends Annotation>... annotation) {
     super(annotation);
     this.manifest = manifest;
+    this.configurationSource = configurationSource;
   }
 
   @Override
   public void processField(Object target, Field field) {
     manifest.registerType(field.getName(), field.getType());
+    processConfiguration(field);
+  }
+
+  private void processConfiguration(Field field) {
+    UnderTest underTest = field.getAnnotation(UnderTest.class);
+    if (underTest != null)
+      processConfiguration(field.getType(), underTest.value());
+    
+    Uncontrolled uncontrolled = field.getAnnotation(Uncontrolled.class);
+    if (uncontrolled != null)
+      processConfiguration(field.getType(), uncontrolled.value());
+  }
+
+  private void processConfiguration(Class<?> type, String[] value) {
+    for (String s : value) {
+      int index = s.indexOf('=');
+      if (index < 1)
+        throw new InvalidConfigurationException(type, s);
+      
+      String fieldName = s.substring(0, index);
+      verifyField(type, fieldName, s);
+      String key = Introspector.decapitalize(type.getSimpleName()) + "." + fieldName;
+      addValue(key, s.substring(index + 1));
+    }
+  }
+
+  private void verifyField(Class<?> type, String fieldName, String s) {
+    try {
+      Field f = type.getDeclaredField(fieldName);
+      if (!f.isAnnotationPresent(Configured.class))
+        throw new ConfiguredFieldNotFoundForConfigurationException(type, fieldName, s);
+    }
+    catch (SecurityException e) {
+      throw new RuntimeException(e);
+    }
+    catch (NoSuchFieldException e) {
+      throw new ConfiguredFieldNotFoundForConfigurationException(type, fieldName, s);
+    }
+  }
+
+  private void addValue(String key, String value) {
+    configurationSource.getConfigurationSource().addValue(key, value);
   }
 
   @Override

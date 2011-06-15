@@ -57,7 +57,6 @@ public class UnderTestAnnotatedFieldProcessorTest {
     canProcess("nonStatic");
   }
 
-
   private boolean canProcess(String name) {
     Field f = getField(name);
     return underTestProcessor().canProcess(f);
@@ -65,7 +64,7 @@ public class UnderTestAnnotatedFieldProcessorTest {
 
   @SuppressWarnings("unchecked")
   private UnderTestAnnotatedFieldProcessor underTestProcessor() {
-    return new UnderTestAnnotatedFieldProcessor(null, UnderTest.class);
+    return new UnderTestAnnotatedFieldProcessor(null, null, UnderTest.class);
   }
 
   private Field getField(String name) {

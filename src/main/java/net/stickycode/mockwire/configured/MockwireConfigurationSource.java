@@ -106,9 +106,8 @@ public class MockwireConfigurationSource
     return i;
   }
 
-  private void addValue(String key, String value) {
+  public void addValue(String key, String value) {
     configuration.put(key, value);
   }
-
 
 }
