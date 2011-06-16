@@ -12,33 +12,35 @@ import org.junit.runners.model.Statement;
 
 /**
  * A jUnit runner to make your test classes and code behave like it would when run live in a di context ala Mockwire.
- *
+ * 
  * The default context used for Dependency Injection is a manifest defined by the test class itself. It will only contain
  * {@link UnderTest code under test} and {@link Controlled controlled} classes in the actual test class or its super types.
- *
+ * 
  * <pre>
  * package net.stickycode.example;
- *
- *  &#064;RunWith(MockwireRunner.class)
- *  public class ContainedTest {
- *
- *  &#064;UnderTest
- *  SomeConcreteClass field;
- *
- *  &#064;Inject
- *  SomeConcreteClass injectedInstanceOfBlessesClass;
- *
- *  &#064;Inject
- *  IsolateTestContext context;
- *
- *  &#064;Test
- *  public void testManifestHasCodeUnderTest() {
- *    assertThat(context.hasRegisteredType(ConcreteClass.class)).isTrue();
- *  }
+ * 
+ * &#064;RunWith(MockwireRunner.class)
+ * public class ContainedTest {
+ * 
+ *   &#064;UnderTest
+ *   SomeConcreteClass field;
+ * 
+ *   &#064;Inject
+ *   SomeConcreteClass injectedInstanceOfBlessesClass;
+ * 
+ *   &#064;Inject
+ *   IsolateTestContext context;
+ * 
+ *   &#064;Test
+ *   public void testManifestHasCodeUnderTest() {
+ *     assertThat(context.hasRegisteredType(ConcreteClass.class)).isTrue();
+ *   }
  * }
+ * 
  * </pre>
  */
-public class MockwireRunner extends BlockJUnit4ClassRunner {
+public class MockwireRunner
+    extends BlockJUnit4ClassRunner {
 
   private final class MockwireTestMethodLifecycleStatement
       extends Statement {
@@ -54,7 +56,12 @@ public class MockwireRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void evaluate() throws Throwable {
-      mockwire.initialiseTestInstance(test);
+      try {
+        mockwire.initialiseTestInstance(test);
+      }
+      catch (Throwable t) {
+        throw new AssertionError(t.getMessage());
+      }
       statement.evaluate();
     }
   }
@@ -70,9 +77,21 @@ public class MockwireRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void evaluate() throws Throwable {
-      mockwire.startup();
+      try {
+        mockwire.startup();
+      }
+      catch (Throwable t) {
+        // TODO log it
+        throw new AssertionError(t.getMessage());
+      }
       wrappedStatement.evaluate();
-      mockwire.shutdown();
+      try {
+        mockwire.shutdown();
+      }
+      catch (Throwable t) {
+        // TODO log it
+        throw new AssertionError(t.getMessage());
+      }
     }
   }
 

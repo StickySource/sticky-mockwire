@@ -30,7 +30,7 @@ public class MockwireContext
   }
 
   private final Class<?> testClass;
-  private final String[] scanRoots;
+  private String[] scanRoots;
   private List<ConfigurationSource> configurationSources;
   private Mocker mocker;
   private IsolatedTestManifest manifest;
@@ -39,8 +39,11 @@ public class MockwireContext
 
   public MockwireContext(Class<?> testClass) {
     this.testClass = testClass;
-    this.scanRoots = deriveContainmentRoots(testClass);
-    this.configurationSources = deriveConfigurationSources(testClass);
+  }
+
+  private void initialise() {
+    this.scanRoots = deriveContainmentRoots(this.testClass);
+    this.configurationSources = deriveConfigurationSources(this.testClass);
   }
 
   private String[] deriveContainmentRoots(Class<?> testClass) {
@@ -130,6 +133,8 @@ public class MockwireContext
 
   public void startup() {
     log.debug("startup {}", testClass);
+    initialise();
+    
     mocker = MockerFactoryLoader.load();
     manifest = TestManifestFactoryLoader.load();
 
