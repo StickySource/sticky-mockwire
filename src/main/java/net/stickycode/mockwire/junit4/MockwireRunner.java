@@ -60,7 +60,7 @@ public class MockwireRunner
         mockwire.initialiseTestInstance(test);
       }
       catch (Throwable t) {
-        throw new AssertionError(t.getMessage());
+        throw new AssertionError(t);
       }
       statement.evaluate();
     }
