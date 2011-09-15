@@ -81,16 +81,14 @@ public class MockwireRunner
         mockwire.startup();
       }
       catch (Throwable t) {
-        // TODO log it
-        throw new AssertionError(t.getMessage());
+        throw new AssertionError(t);
       }
       wrappedStatement.evaluate();
       try {
         mockwire.shutdown();
       }
       catch (Throwable t) {
-        // TODO log it
-        throw new AssertionError(t.getMessage());
+        throw new AssertionError(t);
       }
     }
   }
