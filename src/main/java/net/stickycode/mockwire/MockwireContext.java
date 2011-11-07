@@ -17,8 +17,8 @@ import net.stickycode.reflector.Reflector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MockwireContext 
-  implements MockwireConfigurationSourceProvider {
+public class MockwireContext
+    implements MockwireConfigurationSourceProvider {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -30,9 +30,13 @@ public class MockwireContext
   }
 
   private final Class<?> testClass;
+
   private String[] scanRoots;
+
   private List<ConfigurationSource> configurationSources;
+
   private Mocker mocker;
+
   private IsolatedTestManifest manifest;
 
   private MockwireConfigurationSource source;
@@ -95,18 +99,10 @@ public class MockwireContext
       return null;
 
     LinkedList<ConfigurationSource> sources = new LinkedList<ConfigurationSource>();
-    if (configured.useSystemProperties() == Priority.First)
-      sources.add(new SystemPropertiesConfigurationSource());
 
     source = new MockwireConfigurationSource();
     source.add(testClass, configured.value());
     sources.add(source);
-
-    if (configured.useSystemProperties() == Priority.Fallback)
-      sources.add(new SystemPropertiesConfigurationSource());
-
-    if (configured.useEnvironmentProperties())
-      sources.add(new EnvironmentConfigurationSource());
 
     return sources;
   }
@@ -115,9 +111,9 @@ public class MockwireContext
   private void process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
     log.debug("processing test instance '{}'", testInstance);
     new Reflector()
-          .forEachMethod(
-              new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class))
-          .process(testInstance);
+        .forEachMethod(
+            new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class))
+        .process(testInstance);
 
   }
 
@@ -128,13 +124,13 @@ public class MockwireContext
         .forEachField(
             new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class),
             new UnderTestAnnotatedFieldProcessor(manifest, this, UnderTest.class, Uncontrolled.class))
-            .process(testClass);
+        .process(testClass);
   }
 
   public void startup() {
     log.debug("startup {}", testClass);
     initialise();
-    
+
     mocker = MockerFactoryLoader.load();
     manifest = TestManifestFactoryLoader.load();
 
@@ -161,14 +157,14 @@ public class MockwireContext
   public MockwireConfigurationSource getConfigurationSource() {
     if (source != null)
       return source;
-    
+
     source = new MockwireConfigurationSource();
     configurationSources = new LinkedList<ConfigurationSource>();
     configurationSources.add(source);
-    
+
     registerConfigurationSources();
-    
+
     return source;
-    
+
   }
 }
