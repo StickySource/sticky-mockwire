@@ -70,7 +70,7 @@ public class MockwireContext
   private void addFrameworkPackages(String p) {
     if (frameworkPackages == null)
       frameworkPackages = new ArrayList<String>();
-    
+
     frameworkPackages.add(p);
   }
 
@@ -81,7 +81,7 @@ public class MockwireContext
 
     String packageAsPath = packageToPath(testClass.getPackage());
     if (containment.value().length == 0)
-      return new String[] {packageAsPath};
+      return new String[] { packageAsPath };
 
     List<String> paths = new LinkedList<String>();
     for (String path : containment.value()) {
@@ -113,7 +113,7 @@ public class MockwireContext
   private void registerConfigurationSources() {
     if (frameworkPackages == null)
       throw new MockwireConfiguredIsRequiredToTestConfiguredCodeException();
-    
+
     manifest.registerConfiguationSystem(configurationSources);
   }
 
@@ -141,13 +141,12 @@ public class MockwireContext
 
   }
 
-  @SuppressWarnings("unchecked")
   private void process(final IsolatedTestManifest manifest, final Mocker mocker) {
     log.debug("processing test class '{}'", testClass);
     new Reflector()
         .forEachField(
-            new ControlledAnnotatedFieldProcessor(manifest, mocker, Controlled.class),
-            new UnderTestAnnotatedFieldProcessor(manifest, this, UnderTest.class, Uncontrolled.class))
+            new ControlledAnnotatedFieldProcessor(manifest, mocker),
+            new UnderTestAnnotatedFieldProcessor(manifest, this))
         .process(testClass);
   }
 
@@ -157,7 +156,7 @@ public class MockwireContext
 
     mocker = MockerFactoryLoader.load();
     manifest = TestManifestFactoryLoader.load();
-    
+
     if (frameworkPackages != null)
       manifest.initialiseFramework(frameworkPackages);
 

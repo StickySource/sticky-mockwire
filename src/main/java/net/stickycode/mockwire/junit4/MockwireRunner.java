@@ -83,12 +83,16 @@ public class MockwireRunner
       catch (Throwable t) {
         throw new AssertionError(t);
       }
-      wrappedStatement.evaluate();
       try {
-        mockwire.shutdown();
+        wrappedStatement.evaluate();
       }
-      catch (Throwable t) {
-        throw new AssertionError(t);
+      finally {
+        try {
+          mockwire.shutdown();
+        }
+        catch (Throwable t) {
+          throw new AssertionError(t);
+        }
       }
     }
   }

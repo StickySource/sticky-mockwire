@@ -101,9 +101,8 @@ public class UnderTestAnnotatedFieldProcessorTest {
     underTestProcessor().processField(this, f);
   }
 
-  @SuppressWarnings("unchecked")
   private UnderTestAnnotatedFieldProcessor underTestProcessor() {
-    return new UnderTestAnnotatedFieldProcessor(manifest, sourceProvider, UnderTest.class);
+    return new UnderTestAnnotatedFieldProcessor(manifest, sourceProvider);
   }
 
   private Field getField(String name) {

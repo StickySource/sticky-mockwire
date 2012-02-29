@@ -35,16 +35,24 @@ import net.stickycode.stereotype.Configured;
 
 public class UnderTestAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
-  
+
+  private static Class<? extends Annotation>[] subjects;
+
+  static {
+    subjects = AnnotationFinder.load("mockwire", "subject");
+  }
+
   public static interface MockwireConfigurationSourceProvider {
-     MockwireConfigurationSource getConfigurationSource();
+
+    MockwireConfigurationSource getConfigurationSource();
   }
 
   private final IsolatedTestManifest manifest;
+
   private final MockwireConfigurationSourceProvider configurationSource;
 
-  public UnderTestAnnotatedFieldProcessor(IsolatedTestManifest manifest, MockwireConfigurationSourceProvider configurationSource, Class<? extends Annotation>... annotation) {
-    super(annotation);
+  public UnderTestAnnotatedFieldProcessor(IsolatedTestManifest manifest, MockwireConfigurationSourceProvider configurationSource) {
+    super(subjects);
     this.manifest = manifest;
     this.configurationSource = configurationSource;
   }
@@ -59,7 +67,7 @@ public class UnderTestAnnotatedFieldProcessor
     UnderTest underTest = field.getAnnotation(UnderTest.class);
     if (underTest != null)
       processConfiguration(field.getType(), underTest.value());
-    
+
     Uncontrolled uncontrolled = field.getAnnotation(Uncontrolled.class);
     if (uncontrolled != null)
       processConfiguration(field.getType(), uncontrolled.value());
@@ -70,7 +78,7 @@ public class UnderTestAnnotatedFieldProcessor
       int index = s.indexOf('=');
       if (index < 1)
         throw new InvalidConfigurationException(type, s);
-      
+
       String fieldName = s.substring(0, index);
       verifyField(type, fieldName, s);
       String key = Introspector.decapitalize(type.getSimpleName()) + "." + fieldName;

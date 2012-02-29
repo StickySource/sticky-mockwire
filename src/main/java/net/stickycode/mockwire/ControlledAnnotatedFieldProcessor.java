@@ -34,9 +34,15 @@ class ControlledAnnotatedFieldProcessor
 
   private final IsolatedTestManifest manifest;
   private final Mocker mocker;
+  
+  private static Class<? extends Annotation>[] controls;
+  
+  static {
+    controls = AnnotationFinder.load("mockwire", "control");
+  }
 
-  ControlledAnnotatedFieldProcessor(IsolatedTestManifest manifest, Mocker mocker, Class<? extends Annotation>... annotation) {
-    super(annotation);
+  ControlledAnnotatedFieldProcessor(IsolatedTestManifest manifest, Mocker mocker) {
+    super(controls);
     this.manifest = manifest;
     this.mocker = mocker;
   }

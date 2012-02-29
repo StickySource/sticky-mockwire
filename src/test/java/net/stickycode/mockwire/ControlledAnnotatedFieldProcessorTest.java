@@ -23,19 +23,28 @@ public class ControlledAnnotatedFieldProcessorTest {
   @UnderTest
   String underTest;
 
-  public static class StaticMember {}
-  @Controlled StaticMember staticMember;
+  public static class StaticMember {
+  }
+
+  @Controlled
+  StaticMember staticMember;
 
   String unmarked;
 
   @Controlled
   String controlled;
 
-  public interface Interface {}
-  @Controlled Interface iface;
+  public interface Interface {
+  }
 
-  public class NonStaticMember {}
-  @Controlled NonStaticMember nonStaticMember;
+  @Controlled
+  Interface iface;
+
+  public class NonStaticMember {
+  }
+
+  @Controlled
+  NonStaticMember nonStaticMember;
 
   @Test
   public void annotationDetection() {
@@ -54,9 +63,8 @@ public class ControlledAnnotatedFieldProcessorTest {
     return underTestProcessor().canProcess(f);
   }
 
-  @SuppressWarnings("unchecked")
   private ControlledAnnotatedFieldProcessor underTestProcessor() {
-    return new ControlledAnnotatedFieldProcessor(null, null, Controlled.class);
+    return new ControlledAnnotatedFieldProcessor(null, null);
   }
 
   private Field getField(String name) {

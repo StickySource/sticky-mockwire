@@ -23,8 +23,11 @@ public class UnderTestAnnotatedFieldProcessorTest {
   @UnderTest
   String underTest;
 
-  public static class StaticMember {}
-  @UnderTest StaticMember staticMember;
+  public static class StaticMember {
+  }
+
+  @UnderTest
+  StaticMember staticMember;
 
   String other;
 
@@ -39,20 +42,24 @@ public class UnderTestAnnotatedFieldProcessorTest {
     assertThat(canProcess("staticMember")).isTrue();
   }
 
+  public interface Interface {
+  }
 
-  public interface Interface {}
-  @UnderTest Interface iface;
+  @UnderTest
+  Interface iface;
 
-  @Test(expected=InterfacesCannotBePutUnderTestException.class)
+  @Test(expected = InterfacesCannotBePutUnderTestException.class)
   public void interfacesError() {
     canProcess("iface");
   }
 
+  public class NonStaticMember {
+  }
 
-  public class NonStaticMember {}
-  @UnderTest NonStaticMember nonStatic;
+  @UnderTest
+  NonStaticMember nonStatic;
 
-  @Test(expected=NonStaticMemberTypesCannotBePutUnderTestException.class)
+  @Test(expected = NonStaticMemberTypesCannotBePutUnderTestException.class)
   public void nonStaticMemberTypesNotInstantiable() {
     canProcess("nonStatic");
   }
@@ -62,9 +69,8 @@ public class UnderTestAnnotatedFieldProcessorTest {
     return underTestProcessor().canProcess(f);
   }
 
-  @SuppressWarnings("unchecked")
   private UnderTestAnnotatedFieldProcessor underTestProcessor() {
-    return new UnderTestAnnotatedFieldProcessor(null, null, UnderTest.class);
+    return new UnderTestAnnotatedFieldProcessor(null, null);
   }
 
   private Field getField(String name) {
