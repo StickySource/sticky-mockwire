@@ -1,17 +1,17 @@
 package net.stickycode.mockwire;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.stickycode.configured.ConfigurationSource;
-import net.stickycode.configured.ConfigurationSystem;
-import net.stickycode.configured.source.EnvironmentConfigurationSource;
-import net.stickycode.configured.source.SystemPropertiesConfigurationSource;
-import net.stickycode.mockwire.MockwireConfigured.Priority;
 import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor.MockwireConfigurationSourceProvider;
 import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.binder.TestManifestFactoryLoader;
 import net.stickycode.mockwire.configured.MockwireConfigurationSource;
+import net.stickycode.mockwire.configured.MockwireConfiguredIsRequiredToTestConfiguredCodeException;
+import net.stickycode.mockwire.feature.MockwireScan;
 import net.stickycode.reflector.Reflector;
 
 import org.slf4j.Logger;
@@ -41,13 +41,37 @@ public class MockwireContext
 
   private MockwireConfigurationSource source;
 
+  private List<String> frameworkPackages;
+
   public MockwireContext(Class<?> testClass) {
     this.testClass = testClass;
   }
 
   private void initialise() {
+    deriveFrameworkPackages(this.testClass);
     this.scanRoots = deriveContainmentRoots(this.testClass);
     this.configurationSources = deriveConfigurationSources(this.testClass);
+  }
+
+  private void deriveFrameworkPackages(Class<?> klass) {
+    for (Annotation a : this.testClass.getAnnotations()) {
+      if (a.annotationType().isAnnotationPresent(MockwireScan.class)) {
+        MockwireScan scan = a.annotationType().getAnnotation(MockwireScan.class);
+        if (scan.value().length == 0)
+          throw new MockwireScanMustHaveDefinedPackagesToScanException(a);
+
+        for (String p : scan.value()) {
+          addFrameworkPackages(p);
+        }
+      }
+    }
+  }
+
+  private void addFrameworkPackages(String p) {
+    if (frameworkPackages == null)
+      frameworkPackages = new ArrayList<String>();
+    
+    frameworkPackages.add(p);
   }
 
   private String[] deriveContainmentRoots(Class<?> testClass) {
@@ -56,8 +80,8 @@ public class MockwireContext
       return null;
 
     String packageAsPath = packageToPath(testClass.getPackage());
-    if (containment == null || containment.value().length == 0)
-      return new String[] { packageAsPath };
+    if (containment.value().length == 0)
+      return new String[] {packageAsPath};
 
     List<String> paths = new LinkedList<String>();
     for (String path : containment.value()) {
@@ -87,9 +111,9 @@ public class MockwireContext
   }
 
   private void registerConfigurationSources() {
-    if (manifest.hasRegisteredType(ConfigurationSystem.class))
-      throw new ConfigurationSystemWasScannedOrDefinedAlready(testClass);
-
+    if (frameworkPackages == null)
+      throw new MockwireConfiguredIsRequiredToTestConfiguredCodeException();
+    
     manifest.registerConfiguationSystem(configurationSources);
   }
 
@@ -133,6 +157,9 @@ public class MockwireContext
 
     mocker = MockerFactoryLoader.load();
     manifest = TestManifestFactoryLoader.load();
+    
+    if (frameworkPackages != null)
+      manifest.initialiseFramework(frameworkPackages);
 
     if (scanRoots != null)
       manifest.scanPackages(scanRoots);
