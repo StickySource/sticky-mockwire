@@ -40,12 +40,12 @@ isolate the variable under test.</description>
 		<dependency>
 			<groupId>net.stickycode.mockwire</groupId>
 			<artifactId>sticky-mockwire-api</artifactId>
-			<version>[6.1,7)</version>
+			<version>[6.2,7)</version>
 		</dependency>
 		<dependency>
 			<groupId>net.stickycode.configured</groupId>
 			<artifactId>sticky-configured</artifactId>
-			<version>[4.3,5)</version>
+			<version>[4.5,5)</version>
 		</dependency>
 	</dependencies>
 </project>
