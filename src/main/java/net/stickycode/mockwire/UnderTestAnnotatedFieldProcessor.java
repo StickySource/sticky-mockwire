@@ -31,6 +31,7 @@ import java.lang.reflect.Modifier;
 
 import net.stickycode.mockwire.configured.MockwireConfigurationSource;
 import net.stickycode.reflector.AnnotatedFieldProcessor;
+import net.stickycode.reflector.Methods;
 import net.stickycode.stereotype.Configured;
 
 public class UnderTestAnnotatedFieldProcessor
@@ -64,13 +65,13 @@ public class UnderTestAnnotatedFieldProcessor
   }
 
   private void processConfiguration(Field field) {
-    UnderTest underTest = field.getAnnotation(UnderTest.class);
-    if (underTest != null)
-      processConfiguration(field.getType(), underTest.value());
-
-    Uncontrolled uncontrolled = field.getAnnotation(Uncontrolled.class);
-    if (uncontrolled != null)
-      processConfiguration(field.getType(), uncontrolled.value());
+    for (Class<? extends Annotation> subject : subjects) {
+      Annotation a = field.getAnnotation(subject);
+      if (a != null) {
+        String[] config = Methods.invoke(a, a.annotationType(), "value");
+        processConfiguration(field.getType(), config);
+      }
+    }
   }
 
   private void processConfiguration(Class<?> type, String[] value) {

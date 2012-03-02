@@ -32,13 +32,18 @@ import java.util.List;
 
 import net.stickycode.reflector.AnnotatedMethodProcessor;
 
-class UnderTestAnnotatedMethodProcessor
+class UncontrolledAnnotatedMethodProcessor
     extends AnnotatedMethodProcessor {
 
   private final IsolatedTestManifest manifest;
+ private static Class<? extends Annotation>[] factoryMarkers;
+  
+  static {
+    factoryMarkers = AnnotationFinder.load("mockwire", "factory");
+  }
 
-  UnderTestAnnotatedMethodProcessor(IsolatedTestManifest manifest, Class<? extends Annotation>... annotation) {
-    super(annotation);
+  UncontrolledAnnotatedMethodProcessor(IsolatedTestManifest manifest) {
+    super(factoryMarkers);
     this.manifest = manifest;
   }
 

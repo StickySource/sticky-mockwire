@@ -131,12 +131,11 @@ public class MockwireContext
     return sources;
   }
 
-  @SuppressWarnings("unchecked")
   private void process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
     log.debug("processing test instance '{}'", testInstance);
     new Reflector()
         .forEachMethod(
-            new UnderTestAnnotatedMethodProcessor(manifest, UnderTest.class))
+            new UncontrolledAnnotatedMethodProcessor(manifest))
         .process(testInstance);
 
   }
