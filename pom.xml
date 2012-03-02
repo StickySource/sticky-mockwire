@@ -10,7 +10,7 @@
 
 	<groupId>net.stickycode.mockwire</groupId>
 	<artifactId>sticky-mockwire</artifactId>
-	<version>7.2-SNAPSHOT</version>
+	<version>7.3-SNAPSHOT</version>
 
 	<name>sticky-mockwire</name>
 	<description>A mechanism for using a test class as the manifest for isolating the context of a test. Thereby using the same di mechanism you would expect in production but fully controlled to 
