@@ -36,11 +36,8 @@ class UncontrolledAnnotatedMethodProcessor
     extends AnnotatedMethodProcessor {
 
   private final IsolatedTestManifest manifest;
- private static Class<? extends Annotation>[] factoryMarkers;
-  
-  static {
-    factoryMarkers = AnnotationFinder.load("mockwire", "factory");
-  }
+
+  private static Class<? extends Annotation>[] factoryMarkers = AnnotationFinder.load("mockwire", "factory");
 
   UncontrolledAnnotatedMethodProcessor(IsolatedTestManifest manifest) {
     super(factoryMarkers);

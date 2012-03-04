@@ -37,11 +37,7 @@ import net.stickycode.stereotype.Configured;
 public class UnderTestAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
 
-  private static Class<? extends Annotation>[] subjects;
-
-  static {
-    subjects = AnnotationFinder.load("mockwire", "subject");
-  }
+  private static Class<? extends Annotation>[] subjects = AnnotationFinder.load("mockwire", "subject");
 
   public static interface MockwireConfigurationSourceProvider {
 

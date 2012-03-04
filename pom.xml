@@ -35,12 +35,12 @@ isolate the variable under test.</description>
 		<dependency>
 			<groupId>net.stickycode.composite</groupId>
 			<artifactId>sticky-composite-unittest</artifactId>
-			<version>[1.4,2)</version>
+			<version>[1.7,2)</version>
 		</dependency>
 		<dependency>
 			<groupId>net.stickycode.mockwire</groupId>
 			<artifactId>sticky-mockwire-api</artifactId>
-			<version>[6.2,7)</version>
+			<version>[6.3,7)</version>
 		</dependency>
 		<dependency>
 			<groupId>net.stickycode.configured</groupId>
