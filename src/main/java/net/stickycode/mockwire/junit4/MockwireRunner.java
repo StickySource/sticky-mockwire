@@ -114,6 +114,7 @@ public class MockwireRunner
 
   @Override
   protected Statement methodBlock(FrameworkMethod method) {
+    mockwire.setTestName(method.getName());
     // TODO put the method name into configuration as test.name
     if (!mockwire.isolateLifecycles())
       return super.methodBlock(method);

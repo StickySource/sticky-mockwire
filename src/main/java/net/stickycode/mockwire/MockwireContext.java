@@ -43,6 +43,8 @@ public class MockwireContext
 
   private List<String> frameworkPackages;
 
+  private String testName;
+
   public MockwireContext(Class<?> testClass) {
     this.testClass = testClass;
   }
@@ -114,6 +116,7 @@ public class MockwireContext
     if (frameworkPackages == null)
       throw new MockwireConfiguredIsRequiredToTestConfiguredCodeException();
 
+
     manifest.registerConfiguationSystem(configurationSources);
   }
 
@@ -124,11 +127,17 @@ public class MockwireContext
 
     LinkedList<ConfigurationSource> sources = new LinkedList<ConfigurationSource>();
 
-    source = new MockwireConfigurationSource();
+    source = mockwireConfigurationSource();
     source.add(testClass, configured.value());
     sources.add(source);
 
     return sources;
+  }
+
+  private MockwireConfigurationSource mockwireConfigurationSource() {
+    MockwireConfigurationSource mockwireConfigurationSource = new MockwireConfigurationSource();
+    mockwireConfigurationSource.addValue("testName", testName);
+    return mockwireConfigurationSource;
   }
 
   private void process(final IsolatedTestManifest manifest, final Mocker mocker, Object testInstance) {
@@ -156,14 +165,14 @@ public class MockwireContext
     mocker = MockerFactoryLoader.load();
     manifest = TestManifestFactoryLoader.load();
 
+    if (configurationSources != null)
+      registerConfigurationSources();
+    
     if (frameworkPackages != null)
       manifest.initialiseFramework(frameworkPackages);
 
     if (scanRoots != null)
       manifest.scanPackages(scanRoots);
-
-    if (configurationSources != null)
-      registerConfigurationSources();
 
     process(manifest, mocker);
 
@@ -183,13 +192,16 @@ public class MockwireContext
     if (source != null)
       return source;
 
-    source = new MockwireConfigurationSource();
+    source = mockwireConfigurationSource();
     configurationSources = new LinkedList<ConfigurationSource>();
     configurationSources.add(source);
 
     registerConfigurationSources();
 
     return source;
+  }
 
+  public void setTestName(String name) {
+    this.testName = name;
   }
 }
