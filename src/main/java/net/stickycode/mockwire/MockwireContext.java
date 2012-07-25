@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.stickycode.configured.ConfigurationSource;
+import net.stickycode.configuration.ConfigurationSource;
 import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor.MockwireConfigurationSourceProvider;
 import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.binder.TestManifestFactoryLoader;

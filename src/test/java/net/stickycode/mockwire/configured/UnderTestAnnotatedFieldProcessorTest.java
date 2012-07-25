@@ -24,7 +24,7 @@ import net.stickycode.mockwire.IsolatedTestManifest;
 import net.stickycode.mockwire.UnderTest;
 import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor;
 import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor.MockwireConfigurationSourceProvider;
-import net.stickycode.stereotype.Configured;
+import net.stickycode.stereotype.configured.Configured;
 
 import org.junit.Rule;
 import org.junit.Test;

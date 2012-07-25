@@ -18,12 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.stickycode.configured.ConfigurationSource;
+import net.stickycode.configuration.ConfigurationKey;
+import net.stickycode.configuration.ConfigurationSource;
+import net.stickycode.configuration.ConfigurationValue;
+import net.stickycode.configuration.ResolvedConfiguration;
 import net.stickycode.mockwire.ClasspathResourceNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MockwireConfigurationSource
     implements ConfigurationSource {
@@ -33,13 +35,21 @@ public class MockwireConfigurationSource
   private Map<String, String> configuration = new HashMap<String, String>();
 
   @Override
-  public boolean hasValue(String key) {
-    return configuration.containsKey(key);
-  }
+  public void apply(ConfigurationKey key, ResolvedConfiguration values) {
+    final String value = configuration.get(key.join("."));
+    if (value != null)
+      values.add(new ConfigurationValue() {
 
-  @Override
-  public String getValue(String key) {
-    return configuration.get(key);
+        @Override
+        public boolean hasPrecedence(ConfigurationValue v) {
+          return false;
+        }
+
+        @Override
+        public String get() {
+          return value;
+        }
+      });
   }
 
   public void add(Class<?> testClass, String[] value) {
@@ -84,7 +94,8 @@ public class MockwireConfigurationSource
       i.close();
     }
     catch (IOException e) {
-      log.warn("Failed to close input stream of {} on {}. Assuming thats not a critical failure and ignoring.", new Object[] {resource, testClass.getName(), e});
+      log.warn("Failed to close input stream of {} on {}. Assuming thats not a critical failure and ignoring.", new Object[] {
+          resource, testClass.getName(), e });
     }
   }
 

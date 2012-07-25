@@ -12,16 +12,33 @@
  */
 package net.stickycode.mockwire.configured;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import net.stickycode.configuration.ConfigurationKey;
+import net.stickycode.configuration.ConfigurationValue;
+import net.stickycode.configuration.ResolvedConfiguration;
+import net.stickycode.mockwire.ClasspathResourceNotFoundException;
+
 import org.junit.Test;
 
-import net.stickycode.mockwire.ClasspathResourceNotFoundException;
-import net.stickycode.mockwire.configured.MockwireConfigurationSource;
-
-import static org.fest.assertions.Assertions.assertThat;
-
-
-
 public class MockwireConfigurationSourceTest {
+
+  private final class PlainKey
+      implements ConfigurationKey {
+
+    private String key;
+
+    public PlainKey(String key) {
+      this.key = key;
+    }
+
+    @Override
+    public String join(String delimeter) {
+      return key;
+    }
+  }
 
   private class PrivateMemberClass {
 
@@ -32,23 +49,24 @@ public class MockwireConfigurationSourceTest {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
 
     s.add(getClass(), "a=b");
-    assertThat(s.hasValue("a")).isTrue();
-    assertThat(s.getValue("a")).isEqualTo("b");
 
-    s.add(getClass(), "c=d");
-    assertThat(s.hasValue("c")).isTrue();
-    assertThat(s.getValue("c")).isEqualTo("d");
+    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
+    s.apply(new PlainKey("a"), mock);
+
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test
   public void fileProperties() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(getClass(), "configured.properties");
-    assertThat(s.hasValue("ainfile")).isTrue();
-    assertThat(s.getValue("ainfile")).isEqualTo("binfile");
+    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
+    s.apply(new PlainKey("ainfile"), mock);
+
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
-  @Test(expected=ClasspathResourceNotFoundException.class)
+  @Test(expected = ClasspathResourceNotFoundException.class)
   public void fileNotFound() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(getClass(), "whereisit.properties");
@@ -58,18 +76,22 @@ public class MockwireConfigurationSourceTest {
   public void filePropertiesFromMemberClass() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(new PrivateMemberClass().getClass(), "configured.properties");
-    assertThat(s.hasValue("ainfile")).isTrue();
-    assertThat(s.getValue("ainfile")).isEqualTo("binfile");
+    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
+    s.apply(new PlainKey("ainfile"), mock);
+
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test
-  public void filePropertiesFromManyClasses() {
+  public void filePropertiesFromManyFiles() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
-    s.add(getClass(), new String[]{"configured.properties", "configured2.properties"});
-    assertThat(s.hasValue("ainfile")).isTrue();
-    assertThat(s.getValue("ainfile")).isEqualTo("binfile");
-    assertThat(s.hasValue("ainfile2")).isTrue();
-    assertThat(s.getValue("ainfile2")).isEqualTo("binfile2");
+    s.add(getClass(), new String[] { "configured.properties", "configured2.properties" });
+
+    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
+    s.apply(new PlainKey("ainfile"), mock);
+    
+    s.apply(new PlainKey("ainfile2"), mock);
+    verify(mock, times(2)).add(any(ConfigurationValue.class));
   }
 
 }

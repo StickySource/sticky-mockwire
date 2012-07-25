@@ -32,7 +32,7 @@ import java.lang.reflect.Modifier;
 import net.stickycode.mockwire.configured.MockwireConfigurationSource;
 import net.stickycode.reflector.AnnotatedFieldProcessor;
 import net.stickycode.reflector.Methods;
-import net.stickycode.stereotype.Configured;
+import net.stickycode.stereotype.configured.Configured;
 
 public class UnderTestAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
