@@ -12,6 +12,7 @@
  */
 package net.stickycode.mockwire.configured;
 
+import java.beans.Introspector;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -60,8 +61,10 @@ public class MockwireConfigurationSource
 
   public void add(Class<?> testClass, String s) {
     int index = s.indexOf('=');
-    if (index > -1)
+    if (index > -1) {
       addValue(s.substring(0, index), s.substring(index + 1));
+      addValue(Introspector.decapitalize(testClass.getSimpleName()) + "." + s.substring(0, index), s.substring(index + 1));
+    }
     else
       loadClasspathResource(resolveBaseClass(testClass), s);
   }
