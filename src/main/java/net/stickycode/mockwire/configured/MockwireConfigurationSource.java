@@ -114,10 +114,20 @@ public class MockwireConfigurationSource
   }
 
   private InputStream getResourceStream(Class<?> testClass, String resource) {
-    InputStream i = testClass.getResourceAsStream(resource);
-    if (i == null)
+    return walkUpTree(testClass, "/" + testClass.getPackage().getName().replace('.', '/'), resource);
+  }
+  
+  InputStream walkUpTree(Class<?> testClass, String path, String resource) {
+    String name = path + "/" + resource;
+    InputStream i = testClass.getResourceAsStream(name);
+    if (i != null)
+      return i;
+    
+    int index = path.lastIndexOf('/');
+    if (index == -1)
       throw new ClasspathResourceNotFoundException(testClass, resource);
-    return i;
+    
+    return walkUpTree(testClass, path.substring(0, index), resource);
   }
 
   public void addValue(String key, String value) {

@@ -81,6 +81,25 @@ public class MockwireConfigurationSourceTest {
 
     verify(mock).add(any(ConfigurationValue.class));
   }
+  
+  @Test
+  public void filePropertiesFromRootOfClasspath() {
+    MockwireConfigurationSource s = new MockwireConfigurationSource();
+    s.add(new PrivateMemberClass().getClass(), "root.properties");
+    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
+    s.apply(new PlainKey("root"), mock);
+    
+    verify(mock).add(any(ConfigurationValue.class));
+  }
+  @Test
+  public void filePropertiesFromOnePackageUpInClasspath() {
+    MockwireConfigurationSource s = new MockwireConfigurationSource();
+    s.add(new PrivateMemberClass().getClass(), "oneup.properties");
+    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
+    s.apply(new PlainKey("oneup"), mock);
+    
+    verify(mock).add(any(ConfigurationValue.class));
+  }
 
   @Test
   public void filePropertiesFromManyFiles() {
