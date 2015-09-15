@@ -19,14 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.stickycode.configuration.ConfigurationKey;
 import net.stickycode.configuration.ConfigurationSource;
 import net.stickycode.configuration.ConfigurationValue;
 import net.stickycode.configuration.ResolvedConfiguration;
 import net.stickycode.mockwire.ClasspathResourceNotFoundException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MockwireConfigurationSource
     implements ConfigurationSource {
@@ -37,20 +37,27 @@ public class MockwireConfigurationSource
 
   @Override
   public void apply(ConfigurationKey key, ResolvedConfiguration values) {
-    final String value = configuration.get(key.join("."));
-    if (value != null)
-      values.add(new ConfigurationValue() {
+    for (String k : key.join(".")) {
+      final String value = configuration.get(k);
+      if (value != null)
+        values.add(new ConfigurationValue() {
 
-        @Override
-        public boolean hasPrecedence(ConfigurationValue v) {
-          return false;
-        }
+          @Override
+          public boolean hasPrecedence(ConfigurationValue v) {
+            return false;
+          }
 
-        @Override
-        public String get() {
-          return value;
-        }
-      });
+          @Override
+          public String get() {
+            return value;
+          }
+
+          @Override
+          public String toString() {
+            return value;
+          }
+        });
+    }
   }
 
   public void add(Class<?> testClass, String[] value) {
@@ -116,17 +123,17 @@ public class MockwireConfigurationSource
   private InputStream getResourceStream(Class<?> testClass, String resource) {
     return walkUpTree(testClass, "/" + testClass.getPackage().getName().replace('.', '/'), resource);
   }
-  
+
   InputStream walkUpTree(Class<?> testClass, String path, String resource) {
     String name = path + "/" + resource;
     InputStream i = testClass.getResourceAsStream(name);
     if (i != null)
       return i;
-    
+
     int index = path.lastIndexOf('/');
     if (index == -1)
       throw new ClasspathResourceNotFoundException(testClass, resource);
-    
+
     return walkUpTree(testClass, path.substring(0, index), resource);
   }
 
@@ -134,4 +141,8 @@ public class MockwireConfigurationSource
     configuration.put(key, value);
   }
 
+  @Override
+  public String toString() {
+    return getClass().getSimpleName();
+  }
 }

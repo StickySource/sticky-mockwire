@@ -27,22 +27,24 @@ package net.stickycode.mockwire;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import net.stickycode.bootstrap.StickyBootstrap;
 import net.stickycode.reflector.AnnotatedFieldProcessor;
 
 class MockwireAnnotatedFieldProcessor
     extends AnnotatedFieldProcessor {
 
-  private final IsolatedTestManifest manifest;
+  private final StickyBootstrap manifest;
+
   private final Mocker mocker;
 
-  MockwireAnnotatedFieldProcessor(IsolatedTestManifest manifest, Mocker mocker, Class<? extends Annotation>... annotation) {
+  MockwireAnnotatedFieldProcessor(StickyBootstrap bootstrap, Mocker mocker, Class<? extends Annotation>... annotation) {
     super(annotation);
-    this.manifest = manifest;
+    this.manifest = bootstrap;
     this.mocker = mocker;
   }
 
   @Override
   public void processField(Object target, Field field) {
-    manifest.registerBean(field.getName(), mocker.mock(field.getName(), field.getType()), field.getType());
+    manifest.registerSingleton(field.getName(), mocker.mock(field.getName(), field.getType()), field.getType());
   }
 }

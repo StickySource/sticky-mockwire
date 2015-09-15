@@ -12,97 +12,103 @@
  */
 package net.stickycode.mockwire.configured;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import java.lang.reflect.Field;
-
-import net.stickycode.mockwire.ConfiguredFieldNotFoundForConfigurationException;
-import net.stickycode.mockwire.InvalidConfigurationException;
-import net.stickycode.mockwire.IsolatedTestManifest;
-import net.stickycode.mockwire.UnderTest;
-import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor;
-import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor.MockwireConfigurationSourceProvider;
-import net.stickycode.stereotype.configured.Configured;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import mockit.Mocked;
+import mockit.Verifications;
+import net.stickycode.bootstrap.StickyBootstrap;
+import net.stickycode.mockwire.ConfiguredFieldNotFoundForConfigurationException;
+import net.stickycode.mockwire.InvalidConfigurationException;
+import net.stickycode.mockwire.MockwireConfigured;
+import net.stickycode.mockwire.MockwireMetadata;
+import net.stickycode.mockwire.UnderTest;
+import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor;
+import net.stickycode.stereotype.configured.Configured;
+
+@MockwireConfigured
 public class UnderTestAnnotatedFieldProcessorTest {
 
-  MockwireConfigurationSource source = mock(MockwireConfigurationSource.class);
-  MockwireConfigurationSourceProvider sourceProvider = new MockwireConfigurationSourceProvider() {
-    @Override
-    public MockwireConfigurationSource getConfigurationSource() {
-      return source;
-    }
-  };
-  IsolatedTestManifest manifest = mock(IsolatedTestManifest.class);
-  
+  @Mocked
+  MockwireConfigurationSource source;
+
+  @Mocked
+  StickyBootstrap bootstrap;
+
+  MockwireMetadata metadata = new MockwireMetadata(getClass());
+
   @UnderTest("")
   String emptyStringExcepts;
-  
-  @Test(expected=InvalidConfigurationException.class)
+
+  @Test(expected = InvalidConfigurationException.class)
   public void emptyStringExcepts() {
     process();
   }
-  
+
   @UnderTest("value")
   String noEqualsExcepts;
-  
-  @Test(expected=InvalidConfigurationException.class)
+
+  @Test(expected = InvalidConfigurationException.class)
   public void noEqualsExcepts() {
     process();
   }
-  
+
   @UnderTest("=value")
   String noKeyExcepts;
-  
-  @Test(expected=InvalidConfigurationException.class)
+
+  @Test(expected = InvalidConfigurationException.class)
   public void noKeyExcepts() {
     process();
   }
-  
+
   @UnderTest("field=something")
   String missingField;
-  
-  @Test(expected=ConfiguredFieldNotFoundForConfigurationException.class)
+
+  @Test(expected = ConfiguredFieldNotFoundForConfigurationException.class)
   public void missingField() {
     process();
   }
+
   @UnderTest("offset=0")
   String fieldNotConfigured;
-  
-  @Test(expected=ConfiguredFieldNotFoundForConfigurationException.class)
+
+  @Test(expected = ConfiguredFieldNotFoundForConfigurationException.class)
   public void fieldNotConfigured() {
     process();
   }
-  
+
   public static class ConfiguredSomething {
     @Configured
     Boolean something;
   }
+
   @UnderTest("something=value")
   ConfiguredSomething keyValue;
-  
+
   @Test
   public void keyValue() {
     process();
-    verify(source).addValue(eq("configuredSomething.something"), eq("value"));
+
+    new Verifications() {
+      {
+        source.addValue("configuredSomething.something", "value");
+      }
+    };
   }
-  
+
   @Rule
   public TestName name = new TestName();
-  
+
   public void process() {
     Field f = getField(name.getMethodName());
     underTestProcessor().processField(this, f);
   }
 
   private UnderTestAnnotatedFieldProcessor underTestProcessor() {
-    return new UnderTestAnnotatedFieldProcessor(manifest, sourceProvider);
+    return new UnderTestAnnotatedFieldProcessor(bootstrap, metadata);
   }
 
   private Field getField(String name) {

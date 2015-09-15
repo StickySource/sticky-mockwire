@@ -12,16 +12,17 @@
  */
 package net.stickycode.mockwire.configured;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Test;
+
+import mockit.Mocked;
+import mockit.Verifications;
 import net.stickycode.configuration.ConfigurationKey;
 import net.stickycode.configuration.ConfigurationValue;
 import net.stickycode.configuration.ResolvedConfiguration;
 import net.stickycode.mockwire.ClasspathResourceNotFoundException;
-
-import org.junit.Test;
 
 public class MockwireConfigurationSourceTest {
 
@@ -35,8 +36,8 @@ public class MockwireConfigurationSourceTest {
     }
 
     @Override
-    public String join(String delimeter) {
-      return key;
+    public List<String> join(String delimeter) {
+      return Collections.singletonList(key);
     }
   }
 
@@ -44,26 +45,35 @@ public class MockwireConfigurationSourceTest {
 
   }
 
+  @Mocked
+  ResolvedConfiguration mock;
+
   @Test
   public void stringProperties() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
 
     s.add(getClass(), "a=b");
 
-    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
     s.apply(new PlainKey("a"), mock);
 
-    verify(mock).add(any(ConfigurationValue.class));
+    new Verifications() {
+      {
+        mock.add(withInstanceOf(ConfigurationValue.class));
+      }
+    };
   }
 
   @Test
   public void fileProperties() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(getClass(), "configured.properties");
-    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
     s.apply(new PlainKey("ainfile"), mock);
+    new Verifications() {
+      {
+        mock.add(withInstanceOf(ConfigurationValue.class));
+      }
+    };
 
-    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test(expected = ClasspathResourceNotFoundException.class)
@@ -76,29 +86,39 @@ public class MockwireConfigurationSourceTest {
   public void filePropertiesFromMemberClass() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(new PrivateMemberClass().getClass(), "configured.properties");
-    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
     s.apply(new PlainKey("ainfile"), mock);
 
-    verify(mock).add(any(ConfigurationValue.class));
+    new Verifications() {
+      {
+        mock.add(withInstanceOf(ConfigurationValue.class));
+      }
+    };
   }
-  
+
   @Test
   public void filePropertiesFromRootOfClasspath() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(new PrivateMemberClass().getClass(), "root.properties");
-    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
     s.apply(new PlainKey("root"), mock);
-    
-    verify(mock).add(any(ConfigurationValue.class));
+
+    new Verifications() {
+      {
+        mock.add(withInstanceOf(ConfigurationValue.class));
+      }
+    };
   }
+
   @Test
   public void filePropertiesFromOnePackageUpInClasspath() {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(new PrivateMemberClass().getClass(), "oneup.properties");
-    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
     s.apply(new PlainKey("oneup"), mock);
-    
-    verify(mock).add(any(ConfigurationValue.class));
+
+    new Verifications() {
+      {
+        mock.add(withInstanceOf(ConfigurationValue.class));
+      }
+    };
   }
 
   @Test
@@ -106,11 +126,15 @@ public class MockwireConfigurationSourceTest {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(getClass(), new String[] { "configured.properties", "configured2.properties" });
 
-    ResolvedConfiguration mock = mock(ResolvedConfiguration.class);
     s.apply(new PlainKey("ainfile"), mock);
-    
+
     s.apply(new PlainKey("ainfile2"), mock);
-    verify(mock, times(2)).add(any(ConfigurationValue.class));
+
+    new Verifications() {
+      {
+        mock.add(withInstanceOf(ConfigurationValue.class));
+      }
+    };
   }
 
 }

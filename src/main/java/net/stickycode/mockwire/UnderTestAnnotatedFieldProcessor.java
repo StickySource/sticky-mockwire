@@ -29,7 +29,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import net.stickycode.mockwire.configured.MockwireConfigurationSource;
+import net.stickycode.bootstrap.StickyBootstrap;
+import net.stickycode.mockwire.configured.MockwireConfiguredIsRequiredToTestConfiguredCodeException;
 import net.stickycode.reflector.AnnotatedFieldProcessor;
 import net.stickycode.reflector.Methods;
 import net.stickycode.stereotype.configured.Configured;
@@ -39,24 +40,20 @@ public class UnderTestAnnotatedFieldProcessor
 
   private static Class<? extends Annotation>[] subjects = AnnotationFinder.load("mockwire", "subject");
 
-  public static interface MockwireConfigurationSourceProvider {
+  private final StickyBootstrap bootstrap;
 
-    MockwireConfigurationSource getConfigurationSource();
-  }
+  private MockwireMetadata metadata;
 
-  private final IsolatedTestManifest manifest;
-
-  private final MockwireConfigurationSourceProvider configurationSource;
-
-  public UnderTestAnnotatedFieldProcessor(IsolatedTestManifest manifest, MockwireConfigurationSourceProvider configurationSource) {
+  public UnderTestAnnotatedFieldProcessor(StickyBootstrap bootstrap, MockwireMetadata metadata) {
     super(subjects);
-    this.manifest = manifest;
-    this.configurationSource = configurationSource;
+    this.bootstrap = bootstrap;
+    this.metadata = metadata;
   }
+
 
   @Override
   public void processField(Object target, Field field) {
-    manifest.registerType(field.getName(), field.getType());
+    bootstrap.registerType(field.getName(), field.getType());
     processConfiguration(field);
   }
 
@@ -98,7 +95,10 @@ public class UnderTestAnnotatedFieldProcessor
   }
 
   private void addValue(String key, String value) {
-    configurationSource.getConfigurationSource().addValue(key, value);
+    if (metadata.isConfigured())
+      metadata.getConfigurationSource().addValue(key, value);
+    else
+      throw new MockwireConfiguredIsRequiredToTestConfiguredCodeException(metadata.getTestClass());
   }
 
   @Override

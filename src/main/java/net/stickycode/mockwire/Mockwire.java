@@ -14,7 +14,6 @@ package net.stickycode.mockwire;
 
 import net.stickycode.exception.NullParameterException;
 
-
 public final class Mockwire {
 
   private static final String version;
@@ -24,24 +23,30 @@ public final class Mockwire {
     System.out.println("Using Mockwire v" + version + " see http://stickycode.net/mockwire");
   }
 
-  static public MockwireContext isolate(Object testInstance) {
+  static public MockwireContainer isolate(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
 
-    MockwireContext mockwireContext = new MockwireContext(testInstance.getClass());
-    mockwireContext.startup();
-    mockwireContext.initialiseTestInstance(testInstance);
-    return mockwireContext;
+    MockwireMetadata mockwireContext = new MockwireMetadata(testInstance.getClass());
+    MockwireContainer container = container(mockwireContext);
+    container.startup();
+    container.startTest(testInstance);
+    return container;
   }
 
-  static public MockwireContext contain(Object testInstance) {
+  static public MockwireContainer contain(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
 
-    MockwireContext mockwireContext = new MockwireContext(testInstance.getClass());
-    mockwireContext.startup();
-    mockwireContext.initialiseTestInstance(testInstance);
-    return mockwireContext;
+    MockwireMetadata mockwireContext = new MockwireMetadata(testInstance.getClass());
+    MockwireContainer container = container(mockwireContext);
+    container.startup();
+    container.startTest(testInstance);
+    return container;
+  }
+
+  public static MockwireContainer container(MockwireMetadata metadata) {
+    return new MockwireBootstrap(metadata);
   }
 
 }
