@@ -3,7 +3,6 @@ package net.stickycode.mockwire;
 import java.lang.reflect.Method;
 
 import net.stickycode.bootstrap.StickyBootstrap;
-import net.stickycode.mockwire.binder.MockerFactoryLoader;
 import net.stickycode.mockwire.configured.MockwireConfigurationSource;
 import net.stickycode.reflector.Reflector;
 
@@ -14,7 +13,7 @@ public class MockwireBootstrap
 
   private MockwireMetadata metadata;
 
-  private Mocker mocker;
+  private MockwireMockerBridge mocker;
 
   public MockwireBootstrap(MockwireMetadata metadata) {
     this.metadata = metadata;
@@ -23,15 +22,10 @@ public class MockwireBootstrap
   @Override
   public void startup() {
     this.bootstrap = StickyBootstrap.crank();
-    this.mocker = MockerFactoryLoader.load();
+    this.mocker = MockwireMockerBridge.bridge();
+    this.mocker.initialise(bootstrap, metadata.getTestClass());
 
     MockwireFrameworkBridge.bridge().initialise(bootstrap, metadata.getTestClass());
-
-    new Reflector()
-        .forEachField(
-            new ControlledAnnotatedFieldProcessor(bootstrap, mocker),
-            new UnderTestAnnotatedFieldProcessor(bootstrap, metadata))
-        .process(metadata.getTestClass());
 
     bootstrap.scan(metadata.frameworkPackages());
     bootstrap.scan(metadata.containment());
@@ -47,6 +41,12 @@ public class MockwireBootstrap
 
   @Override
   public MockwireContainer startTest(Object test) {
+    new Reflector()
+        .forEachField(
+            new ControlledAnnotatedFieldProcessor(bootstrap, mocker),
+            new UnderTestAnnotatedFieldProcessor(bootstrap, metadata))
+        .process(test);
+
     bootstrap.inject(test);
 
     bootstrap.start();

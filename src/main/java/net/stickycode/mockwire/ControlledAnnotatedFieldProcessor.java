@@ -35,7 +35,7 @@ class ControlledAnnotatedFieldProcessor
 
   private final StickyBootstrap manifest;
 
-  private final Mocker mocker;
+  private final MockwireMockerBridge mocker;
 
   private static Class<? extends Annotation>[] controls;
 
@@ -43,7 +43,7 @@ class ControlledAnnotatedFieldProcessor
     controls = AnnotationFinder.load("mockwire", "control");
   }
 
-  ControlledAnnotatedFieldProcessor(StickyBootstrap bootstrap, Mocker mocker) {
+  ControlledAnnotatedFieldProcessor(StickyBootstrap bootstrap, MockwireMockerBridge mocker) {
     super(controls);
     this.manifest = bootstrap;
     this.mocker = mocker;
@@ -51,6 +51,6 @@ class ControlledAnnotatedFieldProcessor
 
   @Override
   public void processField(Object target, Field field) {
-    manifest.registerSingleton(field.getName(), mocker.mock(field.getName(), field.getType()), field.getType());
+    mocker.process(field.getName(), target, field, field.getType());
   }
 }
