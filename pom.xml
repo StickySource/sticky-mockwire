@@ -12,8 +12,8 @@
 	<artifactId>sticky-mockwire</artifactId>
 	<version>9.3-SNAPSHOT</version>
 
-	<name>sticky-mockwire-8</name>
-	<description>A mechanism for using a test class as the manifest for isolating the context of a test. Thereby using the same di mechanism you would expect in production but fully controlled to 
+	<name>sticky-mockwire-9</name>
+	<description>A mechanism for using a test class as the manifest for isolating the context of a test. Thereby using the same di mechanism you would expect in production but fully controlled to
 isolate the variable under test.</description>
 	<inceptionYear>2009</inceptionYear>
 	<url>http://www.StickyCode.net/mockwire/sticky-mockwire</url>

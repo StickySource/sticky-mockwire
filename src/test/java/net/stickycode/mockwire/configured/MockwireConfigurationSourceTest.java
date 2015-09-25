@@ -39,6 +39,10 @@ public class MockwireConfigurationSourceTest {
     public List<String> join(String delimeter) {
       return Collections.singletonList(key);
     }
+
+    @Override
+    public void apply(ResolvedConfiguration resolution) {
+    }
   }
 
   private class PrivateMemberClass {
