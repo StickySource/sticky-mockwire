@@ -44,7 +44,7 @@ public class MockwireConfigurationSource
 
           @Override
           public boolean hasPrecedence(ConfigurationValue v) {
-            return false;
+            return true;
           }
 
           @Override
