@@ -16,13 +16,6 @@ import net.stickycode.exception.NullParameterException;
 
 public final class Mockwire {
 
-  private static final String version;
-
-  static {
-    version = PomUtils.loadVersion("net.stickycode.mockwire", "sticky-mockwire");
-    System.out.println("Using Mockwire v" + version + " see http://stickycode.net/mockwire");
-  }
-
   static public MockwireContainer isolate(Object testInstance) {
     if (testInstance == null)
       throw new NullParameterException("You passed null when a test instance was expected");
