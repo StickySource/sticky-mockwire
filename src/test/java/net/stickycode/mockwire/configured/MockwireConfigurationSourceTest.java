@@ -12,44 +12,27 @@
  */
 package net.stickycode.mockwire.configured;
 
-import java.util.Collections;
-import java.util.List;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import mockit.Mocked;
-import mockit.Verifications;
-import net.stickycode.configuration.ConfigurationKey;
 import net.stickycode.configuration.ConfigurationValue;
 import net.stickycode.configuration.ResolvedConfiguration;
 import net.stickycode.mockwire.ClasspathResourceNotFoundException;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MockwireConfigurationSourceTest {
-
-  private final class PlainKey
-      implements ConfigurationKey {
-
-    private String key;
-
-    public PlainKey(String key) {
-      this.key = key;
-    }
-
-    @Override
-    public List<String> join(String delimeter) {
-      return Collections.singletonList(key);
-    }
-
-    @Override
-    public void apply(ResolvedConfiguration resolution) {
-    }
-  }
 
   private class PrivateMemberClass {
 
   }
 
-  @Mocked
+  @Mock
   ResolvedConfiguration mock;
 
   @Test
@@ -60,11 +43,7 @@ public class MockwireConfigurationSourceTest {
 
     s.apply(new PlainKey("a"), mock);
 
-    new Verifications() {
-      {
-        mock.add(withInstanceOf(ConfigurationValue.class));
-      }
-    };
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test
@@ -72,12 +51,7 @@ public class MockwireConfigurationSourceTest {
     MockwireConfigurationSource s = new MockwireConfigurationSource();
     s.add(getClass(), "configured.properties");
     s.apply(new PlainKey("ainfile"), mock);
-    new Verifications() {
-      {
-        mock.add(withInstanceOf(ConfigurationValue.class));
-      }
-    };
-
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test(expected = ClasspathResourceNotFoundException.class)
@@ -92,11 +66,7 @@ public class MockwireConfigurationSourceTest {
     s.add(new PrivateMemberClass().getClass(), "configured.properties");
     s.apply(new PlainKey("ainfile"), mock);
 
-    new Verifications() {
-      {
-        mock.add(withInstanceOf(ConfigurationValue.class));
-      }
-    };
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test
@@ -105,11 +75,7 @@ public class MockwireConfigurationSourceTest {
     s.add(new PrivateMemberClass().getClass(), "root.properties");
     s.apply(new PlainKey("root"), mock);
 
-    new Verifications() {
-      {
-        mock.add(withInstanceOf(ConfigurationValue.class));
-      }
-    };
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test
@@ -118,11 +84,7 @@ public class MockwireConfigurationSourceTest {
     s.add(new PrivateMemberClass().getClass(), "oneup.properties");
     s.apply(new PlainKey("oneup"), mock);
 
-    new Verifications() {
-      {
-        mock.add(withInstanceOf(ConfigurationValue.class));
-      }
-    };
+    verify(mock).add(any(ConfigurationValue.class));
   }
 
   @Test
@@ -134,11 +96,7 @@ public class MockwireConfigurationSourceTest {
 
     s.apply(new PlainKey("ainfile2"), mock);
 
-    new Verifications() {
-      {
-        mock.add(withInstanceOf(ConfigurationValue.class));
-      }
-    };
+    verify(mock, times(2)).add(any(ConfigurationValue.class));
   }
 
 }

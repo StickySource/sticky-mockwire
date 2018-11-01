@@ -12,14 +12,17 @@
  */
 package net.stickycode.mockwire.configured;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.lang.reflect.Field;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import mockit.Mocked;
-import mockit.Verifications;
 import net.stickycode.bootstrap.StickyBootstrap;
 import net.stickycode.mockwire.ConfiguredFieldNotFoundForConfigurationException;
 import net.stickycode.mockwire.InvalidConfigurationException;
@@ -29,13 +32,11 @@ import net.stickycode.mockwire.UnderTest;
 import net.stickycode.mockwire.UnderTestAnnotatedFieldProcessor;
 import net.stickycode.stereotype.configured.Configured;
 
+@RunWith(MockitoJUnitRunner.class)
 @MockwireConfigured
 public class UnderTestAnnotatedFieldProcessorTest {
 
-  @Mocked
-  MockwireConfigurationSource source;
-
-  @Mocked
+  @Mock
   StickyBootstrap bootstrap;
 
   MockwireMetadata metadata = new MockwireMetadata(getClass());
@@ -81,6 +82,7 @@ public class UnderTestAnnotatedFieldProcessorTest {
   }
 
   public static class ConfiguredSomething {
+
     @Configured
     Boolean something;
   }
@@ -92,11 +94,10 @@ public class UnderTestAnnotatedFieldProcessorTest {
   public void keyValue() {
     process();
 
-    new Verifications() {
-      {
-        source.addValue("configuredSomething.something", "value");
-      }
-    };
+    assertThat(metadata.getConfigurationSource()).isNotNull();
+    ResolvedConfigurations values = new ResolvedConfigurations();
+    metadata.getConfigurationSource().apply(new PlainKey("configuredSomething", "something"), values);
+    assertThat(values.hasValue()).isTrue();
   }
 
   @Rule
@@ -108,6 +109,7 @@ public class UnderTestAnnotatedFieldProcessorTest {
   }
 
   private UnderTestAnnotatedFieldProcessor underTestProcessor() {
+
     return new UnderTestAnnotatedFieldProcessor(bootstrap, metadata);
   }
 
