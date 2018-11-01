@@ -12,7 +12,7 @@
 
   <groupId>net.stickycode.mockwire</groupId>
   <artifactId>sticky-mockwire</artifactId>
-  <version>9.7</version>
+  <version>9.8-SNAPSHOT</version>
 
   <name>sticky-mockwire-9</name>
   <description>A mechanism for using a test class as the manifest for isolating the context of a test. Thereby using the same di mechanism you would expect in production but fully controlled to
@@ -22,7 +22,7 @@ isolate the variable under test.</description>
 
   <scm>
     <developerConnection>${git.url}</developerConnection>
-    <tag>sticky-mockwire-9.7</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
